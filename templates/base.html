@@ -12,7 +12,6 @@
 {% if entity and entity.lang %}
   {% set lang_code = entity.lang %}
 {% endif %}
-{% set is_home = current_path == "/" or current_path == "" %}
 {% if lang_code == "en" %}
   {% set nav_home = "Home" %}
   {% set nav_papers = "Research" %}
@@ -50,14 +49,12 @@
       {% set is_home = current_path == "/" or current_path == "" %}
       <header class="site-header group/header sticky top-4 z-20 w-full transition-all duration-[800ms] ease-in-out {% if not is_home %}bg-white/20 border border-white/30 rounded-3xl px-4 py-3 shadow-[0_10px_40px_-18px_rgba(34,211,238,0.2)] backdrop-blur-2xl{% endif %}">
         <div class="flex flex-col items-center justify-center gap-3 md:flex-row">
-          <div class="nav-container relative flex w-full flex-wrap items-center justify-center gap-3">
-            <div class="header-name absolute left-0 top-1/2 flex items-center gap-2 rounded-full bg-white/15 border border-white/25 px-3 py-1 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition-all duration-[800ms] ease-in-out will-change-transform {% if not is_home %}opacity-100{% endif %}" style="{% if not is_home %}transform: translate(-6px, -50%) scale(1); filter: blur(0px); pointer-events: auto;{% endif %}">
-              <span class="text-cyan-700">
-                {% if entity and entity.extra and entity.extra.name %}{{ entity.extra.name }}{% else %}{{ nav_profile }}{% endif %}
-              </span>
-              {% if entity and entity.extra and entity.extra.role %}
+          <div class="nav-container relative flex w-full flex-wrap items-center {% if is_home %}justify-center{% else %}justify-between{% endif %} gap-3">
+            <div class="header-name {% if is_home %}absolute left-0 top-1/2{% endif %} flex items-center gap-2 rounded-full bg-white/15 border border-white/25 px-3 py-1 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition-all duration-[800ms] ease-in-out will-change-transform {% if is_home %}opacity-0{% else %}opacity-100{% endif %}" style="{% if is_home %}transform: translate(-6px, -50%) scale(0.96); filter: blur(2px); pointer-events: none;{% else %}pointer-events: auto;{% endif %}">
+              <span class="text-cyan-700">{{ config.extra.name }}</span>
+              {% if config.extra.role %}
               <span class="text-slate-500" aria-hidden="true">•</span>
-              <span class="text-slate-700">{{ entity.extra.role }}</span>
+              <span class="text-slate-700">{{ config.extra.role }}</span>
               {% endif %}
             </div>
             <nav class="nav-wrap flex flex-wrap items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition-transform duration-[800ms] ease-in-out will-change-transform">
@@ -75,9 +72,9 @@
       </main>
 
       <footer class="mt-9 flex flex-col items-start justify-between gap-2 text-sm text-slate-600 sm:flex-row sm:items-center">
-        <span>© {{ now() | date(format="%Y") }} {% if entity and entity.extra and entity.extra.name %}{{ entity.extra.name }}{% else %}学术主页{% endif %}</span>
-        {% if entity and entity.extra and entity.extra.email %}
-        <a class="font-semibold text-teal-700 hover:underline" href="mailto:{{ entity.extra.email }}">{{ entity.extra.email }}</a>
+        <span>© {{ now() | date(format="%Y") }} {{ config.extra.name }}</span>
+        {% if config.extra.email %}
+        <a class="font-semibold text-teal-700 hover:underline" href="mailto:{{ config.extra.email }}">{{ config.extra.email }}</a>
         {% endif %}
       </footer>
     </div>
@@ -90,7 +87,7 @@
         const nav = document.querySelector('.nav-wrap');
         const headerName = document.querySelector('.header-name');
         
-        // 如果不在首页或没有hero元素，直接返回
+        // 如果不在首页或没有hero元素，直接返回，不执行任何动画
         if (!heroName || !header || !nav || !headerName) return;
         
         const updateShift = () => {

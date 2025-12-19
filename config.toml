@@ -23,3 +23,19 @@ build_search_index = true
 
 [extra]
 # Put all your custom variables here
+name = "翟一霖 · Yilin Zhai"
+role = "物理海洋学 / 人工智能 · 硕士生"
+affiliation = "鲁东大学 · 水利土木学院"
+email = "yilin.zhai@m.ldu.edu.cn"
+location = "烟台"
+links = [
+  { label = "Google Scholar", url = "https://scholar.google.com" },
+  { label = "GitHub", url = "https://github.com/username" },
+  { label = "ORCID", url = "https://orcid.org/0000-0000-0000-0000" }
+]
+research_highlights = [
+  "海洋环境要素的数据驱动建模",
+  "海洋工程与风险场景中的智能预测方法",
+  "稀疏观测条件下的环境信息重构与不确定性分析"
+]
+research_bio = "我从事海洋环境要素的智能预测与重构研究，重点关注海洋波浪的数据驱动建模问题。近期工作主要围绕基于深度时序模型的波高预测，以及在稀疏观测条件下的波高重建方法，相关成果发表于 Ocean Engineering。<br><br>此外，我曾参与滨海核电冷源风险海生物轨迹预测与预警项目，并多次开展海上观测任务，关注数据驱动方法在真实复杂海洋场景中的可靠性与适用性"

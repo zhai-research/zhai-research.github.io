@@ -29,31 +29,9 @@
     {% set view_all_diary = "全部博客" %}
   {% endif %}
 
-  {% set featured_papers = [] %}
-  {% set diary_entries = [] %}
-  {% set user_name = "Your Name" %}
-  {% set user_email = "" %}
-  {% set user_avatar = "" %}
-  {% set user_role = "" %}
-  {% set user_affiliation = "" %}
-  {% set user_location = "" %}
-  {% set user_links = [] %}
-  {% set research_highlights = [] %}
-  {% set research_bio = "" %}
-  
-  {% if entity.extra %}
-    {% set featured_papers = entity.extra.featured_papers | default(value=[]) %}
-    {% set diary_entries = entity.extra.diary_entries | default(value=[]) %}
-    {% set user_name = entity.extra.name | default(value="Your Name") %}
-    {% set user_email = entity.extra.email | default(value="") %}
-    {% set user_avatar = entity.extra.avatar | default(value="") %}
-    {% set user_role = entity.extra.role | default(value="") %}
-    {% set user_affiliation = entity.extra.affiliation | default(value="") %}
-    {% set user_location = entity.extra.location | default(value="") %}
-    {% set user_links = entity.extra.links | default(value=[]) %}
-    {% set research_highlights = entity.extra.research_highlights | default(value=[]) %}
-    {% set research_bio = entity.extra.research_bio | default(value="") %}
-  {% endif %}
+  {# 获取论文和博客页面 #}
+  {% set papers_section = get_section(path="papers/_index.md") %}
+  {% set blog_section = get_section(path="blog/_index.md") %}
 
   <section id="home" class="hero grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_1.4fr]">
     <div class="relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-8 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
@@ -62,33 +40,33 @@
         <div class="absolute right-2 top-6 h-32 w-32 rounded-full bg-blue-200/15"></div>
       </div>
       <div class="relative flex items-start gap-4">
-        {% if user_avatar %}
-        <img class="h-20 w-20 rounded-2xl object-cover ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" src="{{ user_avatar }}" alt="{{ user_name }}" loading="lazy" />
+        {% if config.extra.avatar %}
+        <img class="h-20 w-20 rounded-2xl object-cover ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" src="{{ config.extra.avatar }}" alt="{{ config.extra.name }}" loading="lazy" />
         {% else %}
         <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 text-lg font-black uppercase text-white ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" aria-label="Avatar">AI</div>
         {% endif %}
         <div class="flex-1">
-          <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">{{ user_name }}</h1>
-          {% if user_role %}
-          <p class="mt-1 text-lg font-semibold text-slate-900">{{ user_role }}</p>
+          <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">{{ config.extra.name }}</h1>
+          {% if config.extra.role %}
+          <p class="mt-1 text-lg font-semibold text-slate-900">{{ config.extra.role }}</p>
           {% endif %}
         </div>
       </div>
-      {% if user_affiliation %}
-      <p class="relative mt-4 text-sm font-semibold text-slate-800">{{ user_affiliation }}</p>
+      {% if config.extra.affiliation %}
+      <p class="relative mt-4 text-sm font-semibold text-slate-800">{{ config.extra.affiliation }}</p>
       {% endif %}
-      {% if user_location %}
-      <p class="relative text-sm text-slate-600">{{ user_location }}</p>
+      {% if config.extra.location %}
+      <p class="relative text-sm text-slate-600">{{ config.extra.location }}</p>
       {% endif %}
       <div class="relative mt-5 flex flex-wrap items-center gap-3">
-        {% if user_email %}
-        {{ macros::button(text=hero_email, href="mailto:" ~ user_email, variant="primary") }}
+        {% if config.extra.email %}
+        {{ macros::button(text=hero_email, href="mailto:" ~ config.extra.email, variant="primary") }}
         {% endif %}
         {{ macros::button(text=hero_secondary, href="#papers", variant="secondary") }}
       </div>
-      {% if user_links %}
+      {% if config.extra.links %}
       <div class="relative mt-6 flex flex-wrap items-center gap-2">
-        {% for link in user_links %}
+        {% for link in config.extra.links %}
         <a class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition hover:border-cyan-400/40 hover:text-cyan-700 hover:bg-white/25" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
         {% endfor %}
       </div>
@@ -106,20 +84,20 @@
           <h3 class="text-lg font-bold text-slate-900">{{ bio_title }}</h3>
         </div>
       </div>
-      {% if research_bio %}
+      {% if config.extra.research_bio %}
       <div class="relative mt-4 prose prose-sm prose-slate max-w-none">
-        {{ research_bio | safe }}
+        {{ config.extra.research_bio | safe }}
       </div>
       {% else %}
       <p class="relative mt-4 text-sm leading-relaxed text-slate-700">
         {{ lang_code == "en" and "I am a PhD student focusing on multimodal AI and data-efficient learning. My research explores robust representations for vision-language alignment, with applications in video understanding and cross-modal retrieval." or "我是一名博士研究生，研究方向为多模态人工智能与数据高效学习。我的研究探索视觉-语言对齐的鲁棒表征方法，并应用于视频理解和跨模态检索等领域。" }}
       </p>
       {% endif %}
-      {% if research_highlights %}
+      {% if config.extra.research_highlights %}
       <div class="relative mt-6 space-y-2">
         <p class="text-sm font-semibold text-slate-700">{{ hero_focus }}</p>
         <div class="flex flex-wrap gap-2">
-          {% for item in research_highlights %}
+          {% for item in config.extra.research_highlights %}
             {% set loop_index = loop.index0 %}
             {% if loop_index % 6 == 0 %}
               <span class="inline-flex items-center rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1.5 text-xs font-semibold text-cyan-700 backdrop-blur-xl">{{ item }}</span>
@@ -144,23 +122,22 @@
   <section id="papers" class="mt-6 rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-7 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
     {{ macros::section_header(eyebrow=papers_title, title=nav_papers, link_text=view_all_papers, link_href="/papers") }}
     <ul class="mt-4 space-y-3" role="list">
-      {% set papers_list = featured_papers | slice(end=3) %}
-      {% if papers_list %}
-        {% for paper in papers_list %}
+      {% if papers_section.pages | length > 0 %}
+        {% for paper in papers_section.pages | sort(attribute="date") | reverse | slice(end=3) %}
         <li class="flex flex-col gap-1 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl transition hover:bg-white/25">
           <div class="flex items-center justify-between gap-2 flex-wrap">
-            <a class="text-sm font-semibold text-slate-900 hover:text-cyan-700" href="{{ paper.url | default(value='#') }}" {% if paper.url %}target="_blank" rel="noopener noreferrer"{% endif %}"">{{ paper.title }}</a>
-            {% if paper.venue %}
-            <span class="rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-700 backdrop-blur-xl">{{ paper.venue }}</span>
+            <a class="text-sm font-semibold text-slate-900 hover:text-cyan-700" href="{% if paper.extra.url %}{{ paper.extra.url }}{% else %}{{ paper.permalink }}{% endif %}" {% if paper.extra.url %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ paper.title }}</a>
+            {% if paper.extra.venue %}
+            <span class="rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-700 backdrop-blur-xl">{{ paper.extra.venue }}</span>
             {% endif %}
           </div>
-          {% if paper.note %}
-          <p class="text-sm text-slate-600">{{ paper.note }}</p>
+          {% if paper.summary %}
+          <p class="text-sm text-slate-600">{{ paper.summary }}</p>
           {% endif %}
         </li>
         {% endfor %}
       {% else %}
-        <li class="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-600">{{ lang_code == "en" and "Add featured papers in front matter to show here." or "在 Front Matter 添加精选论文以展示。" }}</li>
+        <li class="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-600">{{ lang_code == "en" and "No papers published yet." or "暂无论文发布。" }}</li>
       {% endif %}
     </ul>
   </section>
@@ -168,21 +145,22 @@
   <section id="diary" class="mt-6 rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-7 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
     {{ macros::section_header(eyebrow=diary_title, title=nav_diary, link_text=view_all_diary, link_href="/blog") }}
     <ul class="mt-4 space-y-3" role="list">
-      {% set diary_list = diary_entries | slice(end=3) %}
-      {% if diary_list %}
-        {% for item in diary_list %}
+      {% if blog_section.pages | length > 0 %}
+        {% for post in blog_section.pages | sort(attribute="date") | reverse | slice(end=3) %}
         <li class="flex items-center justify-between gap-3 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl transition hover:bg-white/25">
           <div class="min-w-0 flex-1">
-            <p class="text-sm font-semibold text-slate-900">{{ item.title }}</p>
-            {% if item.summary %}<p class="mt-0.5 text-sm text-slate-600">{{ item.summary }}</p>{% endif %}
+            <p class="text-sm font-semibold text-slate-900">
+              <a href="{{ post.permalink }}" class="hover:text-cyan-700">{{ post.title }}</a>
+            </p>
+            {% if post.summary %}<p class="mt-0.5 text-sm text-slate-600">{{ post.summary }}</p>{% endif %}
           </div>
-          {% if item.date %}
-          <time class="flex-shrink-0 whitespace-nowrap text-xs font-semibold text-slate-500" datetime="{{ item.date }}">{{ item.date }}</time>
+          {% if post.date %}
+          <time class="flex-shrink-0 whitespace-nowrap text-xs font-semibold text-slate-500" datetime="{{ post.date }}">{{ post.date | date(format="%m-%d") }}</time>
           {% endif %}
         </li>
         {% endfor %}
       {% else %}
-        <li class="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-600">{{ lang_code == "en" and "Add diary entries in front matter to show here." or "在 Front Matter 添加日记条目以展示。" }}</li>
+        <li class="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-600">{{ lang_code == "en" and "No blog posts yet." or "暂无博客文章。" }}</li>
       {% endif %}
     </ul>
   </section>
