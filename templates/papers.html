@@ -122,7 +122,6 @@
     // 初始化筛选器选项
     function initializeFilters() {
       const papers = Array.from(document.querySelectorAll('.paper-item'));
-      const dividers = Array.from(document.querySelectorAll('.paper-divider'));
       const venues = new Set();
 
       // 收集所有唯一的期刊
@@ -193,9 +192,7 @@
       
       const papers = Array.from(document.querySelectorAll('.paper-item'));
 
-      let visibleCount = 0;
-      const visibleIndices = [];
-      papers.forEach((paper, idx) => {
+      papers.forEach((paper) => {
         const firstAuthor = paper.dataset.firstAuthor;
         const correspondingAuthor = paper.dataset.correspondingAuthor;
         const venue = paper.dataset.venue;
@@ -215,8 +212,6 @@
 
         if (roleMatch && venueMatch) {
           paper.style.display = '';
-          visibleCount++;
-          visibleIndices.push(idx);
         } else {
           paper.style.display = 'none';
         }
@@ -236,7 +231,7 @@
       // 显示无结果提示
       const container = document.getElementById('papers-list');
       let noResults = document.getElementById('no-results');
-      if (visibleCount === 0) {
+      if (visiblePapers.length === 0) {
         if (!noResults) {
           noResults = document.createElement('div');
           noResults.id = 'no-results';
