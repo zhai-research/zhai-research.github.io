@@ -142,7 +142,7 @@
   </section>
 
   <section id="papers" class="mt-6 rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-7 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
-    {{ macros::section_header(eyebrow=papers_title, title=nav_papers, link_text=view_all_papers, link_href="#papers") }}
+    {{ macros::section_header(eyebrow=papers_title, title=nav_papers, link_text=view_all_papers, link_href="/papers") }}
     <ul class="mt-4 space-y-3" role="list">
       {% set papers_list = featured_papers | slice(end=3) %}
       {% if papers_list %}
@@ -166,7 +166,7 @@
   </section>
 
   <section id="diary" class="mt-6 rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-7 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
-    {{ macros::section_header(eyebrow=diary_title, title=nav_diary, link_text=view_all_diary, link_href="#diary") }}
+    {{ macros::section_header(eyebrow=diary_title, title=nav_diary, link_text=view_all_diary, link_href="/blog") }}
     <ul class="mt-4 space-y-3" role="list">
       {% set diary_list = diary_entries | slice(end=3) %}
       {% if diary_list %}

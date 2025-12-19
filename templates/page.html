@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block content %}
+  <article class="mx-auto max-w-3xl">
+    <header class="mb-8">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="h-8 w-1.5 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full"></div>
+        <h1 class="text-4xl font-black text-slate-900">{{ page.title }}</h1>
+      </div>
+      {% if page.date %}
+      <time class="text-sm font-semibold text-slate-500" datetime="{{ page.date }}">{{ page.date | date(format="%Y年%m月%d日") }}</time>
+      {% endif %}
+    </header>
+
+    <div class="prose prose-slate max-w-none rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-8 py-8 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
+      {{ page.content | safe }}
+    </div>
+  </article>
+{% endblock content %}

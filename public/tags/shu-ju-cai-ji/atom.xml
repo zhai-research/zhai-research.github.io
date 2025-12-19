@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh">
+    <title> - 数据采集</title>
+    <link rel="self" type="application/atom+xml" href="https://0w0r.com/tags/shu-ju-cai-ji/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://0w0r.com"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-02-18T00:00:00+00:00</updated>
+    <id>https://0w0r.com/tags/shu-ju-cai-ji/atom.xml</id>
+    <entry xml:lang="zh">
+        <title>海上观测实验记录</title>
+        <published>2025-02-18T00:00:00+00:00</published>
+        <updated>2025-02-18T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://0w0r.com/blog/ocean-observation-log/"/>
+        <id>https://0w0r.com/blog/ocean-observation-log/</id>
+        
+        <content type="html" xml:base="https://0w0r.com/blog/ocean-observation-log/">&lt;p&gt;上周参与了一次海上观测任务，记录一些数据采集的经验：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;仪器部署位置的选择很关键，需要考虑海流、水深等因素&lt;&#x2F;li&gt;
+&lt;li&gt;数据传输在恶劣海况下容易中断，需要做好本地存储&lt;&#x2F;li&gt;
+&lt;li&gt;实测数据的噪声比想象中更复杂，预处理很重要&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;这次采集的数据将用于后续的模型验证工作。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

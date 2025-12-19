@@ -1,6 +1,18 @@
 <!DOCTYPE html>
-{% set entity = page | default(value=section) %}
-{% set lang_code = entity.lang | default(value=config.default_language) %}
+{% if page %}
+  {% set entity = page %}
+{% elif section %}
+  {% set entity = section %}
+{% elif taxonomy %}
+  {% set entity = taxonomy %}
+{% elif term %}
+  {% set entity = term %}
+{% endif %}
+{% set lang_code = "zh" %}
+{% if entity and entity.lang %}
+  {% set lang_code = entity.lang %}
+{% endif %}
+{% set is_home = current_path == "/" or current_path == "" %}
 {% if lang_code == "en" %}
   {% set nav_home = "Home" %}
   {% set nav_papers = "Research" %}
@@ -18,11 +30,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% if entity %}{{ entity.title }} · {{ nav_profile }}{% else %}{{ nav_profile }}{% endif %}</title>
+    <title>{% if entity and entity.title %}{{ entity.title }} · {{ nav_profile }}{% else %}{{ nav_profile }}{% endif %}</title>
     {% if entity and entity.description %}
     <meta name="description" content="{{ entity.description }}" />
     {% endif %}
-    <meta property="og:title" content="{% if entity %}{{ entity.title }}{% else %}{{ nav_profile }}{% endif %}" />
+    <meta property="og:title" content="{% if entity and entity.title %}{{ entity.title }}{% else %}{{ nav_profile }}{% endif %}" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="{{ lang_code }}" />
     <link rel="stylesheet" href="{{ get_url(path='tailwind.css') }}">
@@ -35,10 +47,11 @@
   </head>
   <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-cyan-50/30 text-slate-900">
     <div class="mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6">
-      <header class="site-header group/header sticky top-4 z-20 w-full transition-all duration-[800ms] ease-in-out">
+      {% set is_home = current_path == "/" or current_path == "" %}
+      <header class="site-header group/header sticky top-4 z-20 w-full transition-all duration-[800ms] ease-in-out {% if not is_home %}bg-white/20 border border-white/30 rounded-3xl px-4 py-3 shadow-[0_10px_40px_-18px_rgba(34,211,238,0.2)] backdrop-blur-2xl{% endif %}">
         <div class="flex flex-col items-center justify-center gap-3 md:flex-row">
           <div class="nav-container relative flex w-full flex-wrap items-center justify-center gap-3">
-            <div class="header-name absolute left-0 top-1/2 flex items-center gap-2 rounded-full bg-white/15 border border-white/25 px-3 py-1 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition-all duration-[800ms] ease-in-out will-change-transform">
+            <div class="header-name absolute left-0 top-1/2 flex items-center gap-2 rounded-full bg-white/15 border border-white/25 px-3 py-1 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition-all duration-[800ms] ease-in-out will-change-transform {% if not is_home %}opacity-100{% endif %}" style="{% if not is_home %}transform: translate(-6px, -50%) scale(1); filter: blur(0px); pointer-events: auto;{% endif %}">
               <span class="text-cyan-700">
                 {% if entity and entity.extra and entity.extra.name %}{{ entity.extra.name }}{% else %}{{ nav_profile }}{% endif %}
               </span>
@@ -48,9 +61,9 @@
               {% endif %}
             </div>
             <nav class="nav-wrap flex flex-wrap items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition-transform duration-[800ms] ease-in-out will-change-transform">
-              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="#home">{{ nav_home }}</a>
-              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="#research">{{ nav_papers }}</a>
-              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="#blog">{{ nav_diary }}</a>
+              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="/">{{ nav_home }}</a>
+              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="/papers">{{ nav_papers }}</a>
+              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="/blog">{{ nav_diary }}</a>
               <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="#about">{{ nav_about }}</a>
             </nav>
           </div>
@@ -76,6 +89,8 @@
         const header = document.querySelector('.site-header');
         const nav = document.querySelector('.nav-wrap');
         const headerName = document.querySelector('.header-name');
+        
+        // 如果不在首页或没有hero元素，直接返回
         if (!heroName || !header || !nav || !headerName) return;
         
         const updateShift = () => {
@@ -102,13 +117,6 @@
           // Nav glide based on computed shift
           const shift = parseFloat(nav.dataset.shift || '140');
           nav.style.transform = `translateX(${(shift * eased).toFixed(2)}px)`;
-
-          // Header background/outline on activation
-          if (eased > 0.001) {
-            header.classList.add('bg-white/20', 'border', 'border-white/30', 'rounded-3xl', 'px-4', 'py-3', 'shadow-[0_10px_40px_-18px_rgba(34,211,238,0.2)]', 'backdrop-blur-2xl');
-          } else {
-            header.classList.remove('bg-white/20', 'border', 'border-white/30', 'rounded-3xl', 'px-4', 'py-3', 'shadow-[0_10px_40px_-18px_rgba(34,211,238,0.2)]', 'backdrop-blur-2xl');
-          }
         };
 
         updateShift();
