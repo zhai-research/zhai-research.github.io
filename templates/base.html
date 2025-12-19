@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% set entity = page | default(value=section) %}
+{% set lang_code = entity.lang | default(value=config.default_language) %}
+{% if lang_code == "en" %}
+  {% set nav_home = "Home" %}
+  {% set nav_papers = "Research" %}
+  {% set nav_diary = "Blog" %}
+  {% set nav_about = "About" %}
+  {% set nav_profile = "Academic Profile" %}
+{% else %}
+  {% set nav_home = "首页" %}
+  {% set nav_papers = "研究" %}
+  {% set nav_diary = "博客" %}
+  {% set nav_about = "关于我" %}
+  {% set nav_profile = "学术主页" %}
+{% endif %}
+<html lang="{{ lang_code }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% if entity %}{{ entity.title }} · {{ nav_profile }}{% else %}{{ nav_profile }}{% endif %}</title>
+    {% if entity and entity.description %}
+    <meta name="description" content="{{ entity.description }}" />
+    {% endif %}
+    <meta property="og:title" content="{% if entity %}{{ entity.title }}{% else %}{{ nav_profile }}{% endif %}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="{{ lang_code }}" />
+    <link rel="stylesheet" href="{{ get_url(path='tailwind.css') }}">
+    <script>
+      if (!window.location.hash && 'scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+        window.scrollTo(0, 0);
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-[radial-gradient(circle_at_10%_10%,_rgba(94,234,212,0.08),_transparent_30%),_radial-gradient(circle_at_90%_0%,_rgba(251,191,36,0.12),_transparent_25%),_#f8fafc] text-slate-900">
+    <div id="blur-cap" class="fixed top-0 left-0 right-0 z-[19] backdrop-blur-xl bg-gradient-to-b from-white/60 to-transparent pointer-events-none h-0 transition-[height] duration-[800ms] ease-in-out"></div>
+
+    <div class="mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6">
+      <header class="site-header group/header sticky top-4 z-20 w-full rounded-2xl transition-all duration-[800ms] ease-in-out">
+        <div class="flex flex-col items-center justify-center gap-3 md:flex-row">
+          <div class="nav-container relative flex w-full flex-wrap items-center justify-center gap-3">
+            <div class="header-name absolute left-0 top-1/2 flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-slate-800 shadow-sm shadow-emerald-200/40 backdrop-blur transition-all duration-[800ms] ease-in-out will-change-transform">
+              <span class="text-emerald-800">
+                {% if entity and entity.extra and entity.extra.name %}{{ entity.extra.name }}{% else %}{{ nav_profile }}{% endif %}
+              </span>
+              {% if entity and entity.extra and entity.extra.role %}
+              <span class="text-slate-500" aria-hidden="true">•</span>
+              <span class="text-slate-700">{{ entity.extra.role }}</span>
+              {% endif %}
+            </div>
+            <nav class="nav-wrap flex flex-wrap items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-sm shadow-slate-900/5 backdrop-blur transition-transform duration-[800ms] ease-in-out will-change-transform">
+              <a class="rounded-full px-3 py-2 transition hover:bg-emerald-50 hover:text-emerald-700" href="#home">{{ nav_home }}</a>
+              <a class="rounded-full px-3 py-2 transition hover:bg-emerald-50 hover:text-emerald-700" href="#research">{{ nav_papers }}</a>
+              <a class="rounded-full px-3 py-2 transition hover:bg-emerald-50 hover:text-emerald-700" href="#blog">{{ nav_diary }}</a>
+              <a class="rounded-full px-3 py-2 transition hover:bg-emerald-50 hover:text-emerald-700" href="#about">{{ nav_about }}</a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <main class="pt-4">
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="mt-9 flex flex-col items-start justify-between gap-2 text-sm text-slate-600 sm:flex-row sm:items-center">
+        <span>© {{ now() | date(format="%Y") }} {% if entity and entity.extra and entity.extra.name %}{{ entity.extra.name }}{% else %}学术主页{% endif %}</span>
+        {% if entity and entity.extra and entity.extra.email %}
+        <a class="font-semibold text-teal-700 hover:underline" href="mailto:{{ entity.extra.email }}">{{ entity.extra.email }}</a>
+        {% endif %}
+      </footer>
+    </div>
+    <script>
+      (() => {
+        if (!window.location.hash) window.scrollTo(0, 0);
+
+        const heroName = document.querySelector('.hero h1');
+        const header = document.querySelector('.site-header');
+        const nav = document.querySelector('.nav-wrap');
+        const headerName = document.querySelector('.header-name');
+        const blurCap = document.getElementById('blur-cap');
+        if (!heroName || !header || !nav || !blurCap || !headerName) return;
+        
+        const updateShift = () => {
+          const headerRect = header.getBoundingClientRect();
+          const navRect = nav.getBoundingClientRect();
+          const target = Math.max(0, (headerRect.width - navRect.width) / 2 - 16);
+          nav.dataset.shift = target.toFixed(1);
+        };
+
+        const updateState = () => {
+          const headerRect = header.getBoundingClientRect();
+          const top = heroName.getBoundingClientRect().top - headerRect.top;
+          const start = headerRect.height || 1;
+          const raw = Math.min(1, Math.max(0, (start - top) / start));
+          const eased = Math.min(1, Math.max(0, (raw - 0.2) / 0.8));
+          header.classList.toggle('show-personal', eased > 0.001);
+
+          // Header name animation
+          headerName.style.opacity = eased.toFixed(3);
+          headerName.style.transform = `translate(-6px, -50%) scale(${(0.96 + 0.04 * eased).toFixed(3)})`;
+          headerName.style.filter = `blur(${(2 * (1 - eased)).toFixed(2)}px)`;
+          headerName.style.pointerEvents = eased > 0.001 ? 'auto' : 'none';
+
+          // Nav glide based on computed shift
+          const shift = parseFloat(nav.dataset.shift || '140');
+          nav.style.transform = `translateX(${(shift * eased).toFixed(2)}px)`;
+
+          // Blur cap height grows with progress, max 36px at full effect
+          const capHeight = Math.min(36, Math.max(0, 36 * eased * 5));
+          blurCap.style.height = `${capHeight.toFixed(1)}px`;
+
+          // Header background/outline on activation
+          if (eased > 0.001) {
+            header.classList.add('bg-white/90', 'border', 'border-slate-200/80', 'rounded-3xl', 'px-4', 'py-3', 'shadow-[0_10px_40px_-18px_rgba(16,185,129,0.35)]', 'backdrop-blur-xl');
+          } else {
+            header.classList.remove('bg-white/90', 'border', 'border-slate-200/80', 'rounded-3xl', 'px-4', 'py-3', 'shadow-[0_10px_40px_-18px_rgba(16,185,129,0.35)]', 'backdrop-blur-xl');
+          }
+        };
+
+        updateShift();
+        window.addEventListener('scroll', updateState, { passive: true });
+        window.addEventListener('resize', () => { updateShift(); updateState(); }, { passive: true });
+        window.addEventListener('load', () => { updateShift(); updateState(); }, { once: true });
+      })();
+    </script>
+  </body>
+</html>

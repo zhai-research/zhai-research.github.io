@@ -1,0 +1,29 @@
+{% macro card(class="") %}
+<div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/95 px-7 py-8 shadow-xl shadow-slate-900/5 {{ class }}">
+  {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro badge(text, variant="emerald") %}
+<span class="inline-flex items-center rounded-full bg-{{ variant }}-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-{{ variant }}-700 ring-1 ring-{{ variant }}-100">{{ text }}</span>
+{% endmacro %}
+
+{% macro section_header(eyebrow, title, link_text="", link_href="#") %}
+<div class="flex items-center justify-between gap-3 flex-wrap">
+  <div>
+    <p class="text-[11px] font-extrabold uppercase tracking-[0.12em] text-emerald-700">{{ eyebrow }}</p>
+    <h2 class="text-xl font-bold text-slate-900">{{ title }}</h2>
+  </div>
+  {% if link_text %}
+  <a class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-600 hover:text-emerald-700" href="{{ link_href }}">{{ link_text }}</a>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro button(text, href, variant="primary") %}
+{% if variant == "primary" %}
+<a class="inline-flex items-center gap-2 rounded-2xl bg-emerald-700 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-emerald-700/25 transition hover:-translate-y-0.5 hover:bg-emerald-800" href="{{ href }}">{{ text }}</a>
+{% else %}
+<a class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-600 hover:text-emerald-700" href="{{ href }}">{{ text }}</a>
+{% endif %}
+{% endmacro %}

@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block content %}
+  {% set entity = page | default(value=section) %}
+  {% set lang_code = entity.lang | default(value=config.default_language) %}
+  
+  {% if lang_code == "en" %}
+    {% set hero_eyebrow = "PhD student profile" %}
+    {% set hero_email = "Email" %}
+    {% set hero_snapshot = "Research notes" %}
+    {% set hero_focus = "Research interests" %}
+    {% set hero_secondary = "View papers" %}
+    {% set bio_title = "Research Bio" %}
+    {% set papers_title = "Featured papers" %}
+    {% set diary_title = "Recent notes" %}
+    {% set view_all_papers = "All papers" %}
+    {% set view_all_diary = "All diary entries" %}
+  {% else %}
+    {% set hero_eyebrow = "博士生学术主页" %}
+    {% set hero_email = "邮件联系" %}
+    {% set hero_snapshot = "研究笔记" %}
+    {% set hero_focus = "研究兴趣" %}
+    {% set hero_secondary = "查看论文" %}
+    {% set bio_title = "研究简介" %}
+    {% set papers_title = "精选论文" %}
+    {% set diary_title = "最新日记" %}
+    {% set view_all_papers = "全部论文" %}
+    {% set view_all_diary = "全部日记" %}
+  {% endif %}
+
+  {% set featured_papers = [] %}
+  {% set diary_entries = [] %}
+  {% set user_name = "Your Name" %}
+  {% set user_email = "" %}
+  {% set user_avatar = "" %}
+  {% set user_role = "" %}
+  {% set user_affiliation = "" %}
+  {% set user_location = "" %}
+  {% set user_links = [] %}
+  {% set research_highlights = [] %}
+  {% set research_bio = "" %}
+  
+  {% if entity.extra %}
+    {% set featured_papers = entity.extra.featured_papers | default(value=[]) %}
+    {% set diary_entries = entity.extra.diary_entries | default(value=[]) %}
+    {% set user_name = entity.extra.name | default(value="Your Name") %}
+    {% set user_email = entity.extra.email | default(value="") %}
+    {% set user_avatar = entity.extra.avatar | default(value="") %}
+    {% set user_role = entity.extra.role | default(value="") %}
+    {% set user_affiliation = entity.extra.affiliation | default(value="") %}
+    {% set user_location = entity.extra.location | default(value="") %}
+    {% set user_links = entity.extra.links | default(value=[]) %}
+    {% set research_highlights = entity.extra.research_highlights | default(value=[]) %}
+    {% set research_bio = entity.extra.research_bio | default(value="") %}
+  {% endif %}
+
+  <section id="home" class="hero grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_1.4fr]">
+    <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/95 px-7 py-8 shadow-xl shadow-slate-900/5">
+      <div class="pointer-events-none absolute inset-0 opacity-60 blur-3xl" aria-hidden="true">
+        <div class="absolute -left-16 -top-16 h-40 w-40 rounded-full bg-emerald-200/30"></div>
+        <div class="absolute right-2 top-6 h-32 w-32 rounded-full bg-amber-200/50"></div>
+      </div>
+      <div class="relative flex items-start gap-4">
+        {% if user_avatar %}
+        <img class="h-20 w-20 rounded-2xl object-cover ring-4 ring-emerald-100 shadow-md" src="{{ user_avatar }}" alt="{{ user_name }}" loading="lazy" />
+        {% else %}
+        <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-amber-300 text-lg font-black uppercase text-white ring-4 ring-emerald-100 shadow-md" aria-label="Avatar">AI</div>
+        {% endif %}
+        <div class="flex-1">
+          <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">{{ user_name }}</h1>
+          {% if user_role %}
+          <p class="mt-1 text-lg font-semibold text-slate-900">{{ user_role }}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% if user_affiliation %}
+      <p class="relative mt-4 text-sm font-semibold text-slate-800">{{ user_affiliation }}</p>
+      {% endif %}
+      {% if user_location %}
+      <p class="relative text-sm text-slate-600">{{ user_location }}</p>
+      {% endif %}
+      <div class="relative mt-5 flex flex-wrap items-center gap-3">
+        {% if user_email %}
+        {{ macros::button(text=hero_email, href="mailto:" ~ user_email, variant="primary") }}
+        {% endif %}
+        {{ macros::button(text=hero_secondary, href="#papers", variant="secondary") }}
+      </div>
+      {% if user_links %}
+      <div class="relative mt-4 flex flex-wrap items-center gap-2">
+        {% for link in user_links %}
+        <a class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-600 hover:text-emerald-700" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if research_highlights %}
+      <div class="relative mt-6 space-y-2">
+        <p class="text-sm font-semibold text-slate-700">{{ hero_focus }}</p>
+        <div class="flex flex-wrap gap-2">
+          {% for item in research_highlights %}
+          <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-100">{{ item }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/95 px-7 py-8 shadow-xl shadow-slate-900/5">
+      <div class="pointer-events-none absolute inset-0 opacity-80 blur-3xl" aria-hidden="true">
+        <div class="absolute -left-8 -bottom-10 h-32 w-32 rounded-full bg-emerald-200/50"></div>
+        <div class="absolute right-0 top-0 h-32 w-32 rounded-full bg-amber-200/50"></div>
+      </div>
+      <div class="relative flex items-center justify-between">
+        <p class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-100">{{ bio_title }}</p>
+      </div>
+      {% if research_bio %}
+      <div class="relative mt-4 prose prose-sm prose-slate max-w-none">
+        {{ research_bio | safe }}
+      </div>
+      {% else %}
+      <p class="relative mt-4 text-sm leading-relaxed text-slate-700">
+        {{ lang_code == "en" and "I am a PhD student focusing on multimodal AI and data-efficient learning. My research explores robust representations for vision-language alignment, with applications in video understanding and cross-modal retrieval." or "我是一名博士研究生，研究方向为多模态人工智能与数据高效学习。我的研究探索视觉-语言对齐的鲁棒表征方法，并应用于视频理解和跨模态检索等领域。" }}
+      </p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section id="papers" class="mt-6 rounded-3xl border border-slate-200 bg-white/95 px-7 py-7 shadow-xl shadow-slate-900/5">
+    {{ macros::section_header(eyebrow=papers_title, title=nav_papers, link_text=view_all_papers, link_href="#papers") }}
+    <ul class="mt-4 space-y-3" role="list">
+      {% set papers_list = featured_papers | slice(end=3) %}
+      {% if papers_list %}
+        {% for paper in papers_list %}
+        <li class="flex flex-col gap-1 rounded-2xl border border-slate-100 bg-white/90 px-4 py-3 shadow-sm shadow-slate-900/5">
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <a class="text-sm font-semibold text-slate-900 hover:text-emerald-700" href="{{ paper.url | default(value='#') }}" {% if paper.url %}target="_blank" rel="noopener noreferrer"{% endif %}">{{ paper.title }}</a>
+            {% if paper.venue %}
+            <span class="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-emerald-700 ring-1 ring-emerald-100">{{ paper.venue }}</span>
+            {% endif %}
+          </div>
+          {% if paper.note %}
+          <p class="text-sm text-slate-600">{{ paper.note }}</p>
+          {% endif %}
+        </li>
+        {% endfor %}
+      {% else %}
+        <li class="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-600">{{ lang_code == "en" and "Add featured papers in front matter to show here." or "在 Front Matter 添加精选论文以展示。" }}</li>
+      {% endif %}
+    </ul>
+  </section>
+
+  <section id="diary" class="mt-6 rounded-3xl border border-slate-200 bg-white/95 px-7 py-7 shadow-xl shadow-slate-900/5">
+    {{ macros::section_header(eyebrow=diary_title, title=nav_diary, link_text=view_all_diary, link_href="#diary") }}
+    <ul class="mt-4 space-y-3" role="list">
+      {% set diary_list = diary_entries | slice(end=3) %}
+      {% if diary_list %}
+        {% for item in diary_list %}
+        <li class="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white/90 px-4 py-3 shadow-sm shadow-slate-900/5">
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-semibold text-slate-900">{{ item.title }}</p>
+            {% if item.summary %}<p class="mt-0.5 text-sm text-slate-600">{{ item.summary }}</p>{% endif %}
+          </div>
+          {% if item.date %}
+          <time class="flex-shrink-0 whitespace-nowrap text-xs font-semibold text-slate-500" datetime="{{ item.date }}">{{ item.date }}</time>
+          {% endif %}
+        </li>
+        {% endfor %}
+      {% else %}
+        <li class="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-600">{{ lang_code == "en" and "Add diary entries in front matter to show here." or "在 Front Matter 添加日记条目以展示。" }}</li>
+      {% endif %}
+    </ul>
+  </section>
+{% endblock content %}

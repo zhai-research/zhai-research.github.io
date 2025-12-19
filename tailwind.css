@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@source "./templates/**/*.{html,tera}";
+@source "./content/**/*.{md,html}";
+
+@layer base {
+  /* Offset in-page anchors so sticky header doesn't cover content */
+  :target {
+    scroll-margin-top: 7rem;
+  }
+}
