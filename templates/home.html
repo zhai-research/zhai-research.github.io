@@ -24,9 +24,9 @@
     {% set hero_secondary = "查看论文" %}
     {% set bio_title = "研究简介" %}
     {% set papers_title = "精选论文" %}
-    {% set diary_title = "最新日记" %}
+    {% set diary_title = "最新博客" %}
     {% set view_all_papers = "全部论文" %}
-    {% set view_all_diary = "全部日记" %}
+    {% set view_all_diary = "全部博客" %}
   {% endif %}
 
   {% set featured_papers = [] %}
@@ -56,16 +56,16 @@
   {% endif %}
 
   <section id="home" class="hero grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_1.4fr]">
-    <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/95 px-7 py-8 shadow-xl shadow-slate-900/5">
-      <div class="pointer-events-none absolute inset-0 opacity-60 blur-3xl" aria-hidden="true">
-        <div class="absolute -left-16 -top-16 h-40 w-40 rounded-full bg-emerald-200/30"></div>
-        <div class="absolute right-2 top-6 h-32 w-32 rounded-full bg-amber-200/50"></div>
+    <div class="relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-8 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
+      <div class="pointer-events-none absolute inset-0 opacity-25 blur-3xl" aria-hidden="true">
+        <div class="absolute -left-16 -top-16 h-40 w-40 rounded-full bg-cyan-300/15"></div>
+        <div class="absolute right-2 top-6 h-32 w-32 rounded-full bg-blue-200/15"></div>
       </div>
       <div class="relative flex items-start gap-4">
         {% if user_avatar %}
-        <img class="h-20 w-20 rounded-2xl object-cover ring-4 ring-emerald-100 shadow-md" src="{{ user_avatar }}" alt="{{ user_name }}" loading="lazy" />
+        <img class="h-20 w-20 rounded-2xl object-cover ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" src="{{ user_avatar }}" alt="{{ user_name }}" loading="lazy" />
         {% else %}
-        <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-amber-300 text-lg font-black uppercase text-white ring-4 ring-emerald-100 shadow-md" aria-label="Avatar">AI</div>
+        <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 text-lg font-black uppercase text-white ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" aria-label="Avatar">AI</div>
         {% endif %}
         <div class="flex-1">
           <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">{{ user_name }}</h1>
@@ -87,31 +87,24 @@
         {{ macros::button(text=hero_secondary, href="#papers", variant="secondary") }}
       </div>
       {% if user_links %}
-      <div class="relative mt-4 flex flex-wrap items-center gap-2">
+      <div class="relative mt-6 flex flex-wrap items-center gap-2">
         {% for link in user_links %}
-        <a class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-600 hover:text-emerald-700" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+        <a class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition hover:border-cyan-400/40 hover:text-cyan-700 hover:bg-white/25" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
         {% endfor %}
-      </div>
-      {% endif %}
-      {% if research_highlights %}
-      <div class="relative mt-6 space-y-2">
-        <p class="text-sm font-semibold text-slate-700">{{ hero_focus }}</p>
-        <div class="flex flex-wrap gap-2">
-          {% for item in research_highlights %}
-          <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-100">{{ item }}</span>
-          {% endfor %}
-        </div>
       </div>
       {% endif %}
     </div>
 
-    <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/95 px-7 py-8 shadow-xl shadow-slate-900/5">
-      <div class="pointer-events-none absolute inset-0 opacity-80 blur-3xl" aria-hidden="true">
-        <div class="absolute -left-8 -bottom-10 h-32 w-32 rounded-full bg-emerald-200/50"></div>
-        <div class="absolute right-0 top-0 h-32 w-32 rounded-full bg-amber-200/50"></div>
+    <div class="relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-8 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
+      <div class="pointer-events-none absolute inset-0 opacity-25 blur-3xl" aria-hidden="true">
+        <div class="absolute -left-8 -bottom-10 h-32 w-32 rounded-full bg-cyan-300/15"></div>
+        <div class="absolute right-0 top-0 h-32 w-32 rounded-full bg-blue-200/15"></div>
       </div>
       <div class="relative flex items-center justify-between">
-        <p class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-100">{{ bio_title }}</p>
+        <div class="flex items-center gap-3">
+          <div class="h-6 w-1 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full"></div>
+          <h3 class="text-lg font-bold text-slate-900">{{ bio_title }}</h3>
+        </div>
       </div>
       {% if research_bio %}
       <div class="relative mt-4 prose prose-sm prose-slate max-w-none">
@@ -122,20 +115,43 @@
         {{ lang_code == "en" and "I am a PhD student focusing on multimodal AI and data-efficient learning. My research explores robust representations for vision-language alignment, with applications in video understanding and cross-modal retrieval." or "我是一名博士研究生，研究方向为多模态人工智能与数据高效学习。我的研究探索视觉-语言对齐的鲁棒表征方法，并应用于视频理解和跨模态检索等领域。" }}
       </p>
       {% endif %}
+      {% if research_highlights %}
+      <div class="relative mt-6 space-y-2">
+        <p class="text-sm font-semibold text-slate-700">{{ hero_focus }}</p>
+        <div class="flex flex-wrap gap-2">
+          {% for item in research_highlights %}
+            {% set loop_index = loop.index0 %}
+            {% if loop_index % 6 == 0 %}
+              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1.5 text-xs font-semibold text-cyan-700 backdrop-blur-xl">{{ item }}</span>
+            {% elif loop_index % 6 == 1 %}
+              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-purple-200/30 to-pink-200/30 border border-purple-300/35 px-3 py-1.5 text-xs font-semibold text-purple-700 backdrop-blur-xl">{{ item }}</span>
+            {% elif loop_index % 6 == 2 %}
+              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-emerald-200/30 to-teal-200/30 border border-emerald-300/35 px-3 py-1.5 text-xs font-semibold text-emerald-700 backdrop-blur-xl">{{ item }}</span>
+            {% elif loop_index % 6 == 3 %}
+              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-amber-200/30 to-orange-200/30 border border-amber-300/35 px-3 py-1.5 text-xs font-semibold text-amber-700 backdrop-blur-xl">{{ item }}</span>
+            {% elif loop_index % 6 == 4 %}
+              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-rose-200/30 to-red-200/30 border border-rose-300/35 px-3 py-1.5 text-xs font-semibold text-rose-700 backdrop-blur-xl">{{ item }}</span>
+            {% else %}
+              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-200/30 to-blue-200/30 border border-indigo-300/35 px-3 py-1.5 text-xs font-semibold text-indigo-700 backdrop-blur-xl">{{ item }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
     </div>
   </section>
 
-  <section id="papers" class="mt-6 rounded-3xl border border-slate-200 bg-white/95 px-7 py-7 shadow-xl shadow-slate-900/5">
+  <section id="papers" class="mt-6 rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-7 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
     {{ macros::section_header(eyebrow=papers_title, title=nav_papers, link_text=view_all_papers, link_href="#papers") }}
     <ul class="mt-4 space-y-3" role="list">
       {% set papers_list = featured_papers | slice(end=3) %}
       {% if papers_list %}
         {% for paper in papers_list %}
-        <li class="flex flex-col gap-1 rounded-2xl border border-slate-100 bg-white/90 px-4 py-3 shadow-sm shadow-slate-900/5">
+        <li class="flex flex-col gap-1 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl transition hover:bg-white/25">
           <div class="flex items-center justify-between gap-2 flex-wrap">
-            <a class="text-sm font-semibold text-slate-900 hover:text-emerald-700" href="{{ paper.url | default(value='#') }}" {% if paper.url %}target="_blank" rel="noopener noreferrer"{% endif %}">{{ paper.title }}</a>
+            <a class="text-sm font-semibold text-slate-900 hover:text-cyan-700" href="{{ paper.url | default(value='#') }}" {% if paper.url %}target="_blank" rel="noopener noreferrer"{% endif %}"">{{ paper.title }}</a>
             {% if paper.venue %}
-            <span class="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-emerald-700 ring-1 ring-emerald-100">{{ paper.venue }}</span>
+            <span class="rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-700 backdrop-blur-xl">{{ paper.venue }}</span>
             {% endif %}
           </div>
           {% if paper.note %}
@@ -149,13 +165,13 @@
     </ul>
   </section>
 
-  <section id="diary" class="mt-6 rounded-3xl border border-slate-200 bg-white/95 px-7 py-7 shadow-xl shadow-slate-900/5">
+  <section id="diary" class="mt-6 rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-7 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
     {{ macros::section_header(eyebrow=diary_title, title=nav_diary, link_text=view_all_diary, link_href="#diary") }}
     <ul class="mt-4 space-y-3" role="list">
       {% set diary_list = diary_entries | slice(end=3) %}
       {% if diary_list %}
         {% for item in diary_list %}
-        <li class="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white/90 px-4 py-3 shadow-sm shadow-slate-900/5">
+        <li class="flex items-center justify-between gap-3 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl transition hover:bg-white/25">
           <div class="min-w-0 flex-1">
             <p class="text-sm font-semibold text-slate-900">{{ item.title }}</p>
             {% if item.summary %}<p class="mt-0.5 text-sm text-slate-600">{{ item.summary }}</p>{% endif %}
