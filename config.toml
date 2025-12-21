@@ -1,5 +1,5 @@
 # The URL the site will be built for
-base_url = "https://0w0r.com"
+base_url = "https://zhai-research.github.io"
 default_language = "zh"
 
 # Whether to automatically compile all Sass files in the sass directory
