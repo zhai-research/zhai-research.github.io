@@ -34,10 +34,12 @@
   {% set blog_section = get_section(path="blog/_index.md") %}
 
   <section id="home" class="hero grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_1.4fr]">
-    <div class="relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-8 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
-      <div class="pointer-events-none absolute inset-0 opacity-25 blur-3xl" aria-hidden="true">
-        <div class="absolute -left-16 -top-16 h-40 w-40 rounded-full bg-cyan-300/15"></div>
-        <div class="absolute right-2 top-6 h-32 w-32 rounded-full bg-blue-200/15"></div>
+    <div class="relative overflow-hidden rounded-3xl border border-white/30 bg-gradient-to-br from-white/50 via-white/20 to-white/10 px-7 py-8 shadow-[0_18px_50px_-30px_rgba(56,189,248,0.3),0_10px_24px_-16px_rgba(15,23,42,0.25)] backdrop-blur-[28px]">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="absolute inset-0 rounded-3xl bg-gradient-to-b from-white/70 via-white/20 to-transparent opacity-80"></div>
+        <div class="absolute left-10 top-6 h-24 w-24 rounded-full bg-sky-200/40 blur-2xl"></div>
+        <div class="absolute right-12 top-8 h-24 w-24 rounded-full bg-cyan-200/35 blur-2xl"></div>
+        <div class="absolute inset-x-6 top-2 h-6 rounded-full bg-white/70 blur-md"></div>
       </div>
       <div class="relative flex items-start gap-4">
         {% if config.extra.avatar %}
@@ -73,10 +75,12 @@
       {% endif %}
     </div>
 
-    <div class="relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-8 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
-      <div class="pointer-events-none absolute inset-0 opacity-25 blur-3xl" aria-hidden="true">
-        <div class="absolute -left-8 -bottom-10 h-32 w-32 rounded-full bg-cyan-300/15"></div>
-        <div class="absolute right-0 top-0 h-32 w-32 rounded-full bg-blue-200/15"></div>
+    <div class="relative overflow-hidden rounded-3xl border border-white/30 bg-gradient-to-br from-white/50 via-white/20 to-white/10 px-7 py-8 shadow-[0_18px_50px_-30px_rgba(56,189,248,0.3),0_10px_24px_-16px_rgba(15,23,42,0.25)] backdrop-blur-[28px]">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="absolute inset-0 rounded-3xl bg-gradient-to-b from-white/70 via-white/20 to-transparent opacity-80"></div>
+        <div class="absolute left-10 top-6 h-24 w-24 rounded-full bg-sky-200/40 blur-2xl"></div>
+        <div class="absolute right-12 top-8 h-24 w-24 rounded-full bg-cyan-200/35 blur-2xl"></div>
+        <div class="absolute inset-x-6 top-2 h-6 rounded-full bg-white/70 blur-md"></div>
       </div>
       <div class="relative flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -124,16 +128,18 @@
     <ul class="mt-4 space-y-3" role="list">
       {% if papers_section.pages | length > 0 %}
         {% for paper in papers_section.pages | sort(attribute="date") | reverse | slice(end=3) %}
-        <li class="flex flex-col gap-1 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl transition hover:bg-white/25">
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <a class="text-sm font-semibold text-slate-900 hover:text-cyan-700" href="{% if paper.extra.url %}{{ paper.extra.url }}{% else %}{{ paper.permalink }}{% endif %}" {% if paper.extra.url %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ paper.title }}</a>
-            {% if paper.extra.venue %}
-            <span class="rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-700 backdrop-blur-xl">{{ paper.extra.venue }}</span>
+        <li>
+          <a class="flex flex-col gap-1 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl transition hover:bg-white/25 hover:border-cyan-300/40" href="{{ paper.permalink }}">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <span class="text-sm font-semibold text-slate-900">{{ paper.title }}</span>
+              {% if paper.extra.venue %}
+              <span class="rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-700 backdrop-blur-xl">{{ paper.extra.venue }}</span>
+              {% endif %}
+            </div>
+            {% if paper.summary %}
+            <p class="text-sm text-slate-600">{{ paper.summary }}</p>
             {% endif %}
-          </div>
-          {% if paper.summary %}
-          <p class="text-sm text-slate-600">{{ paper.summary }}</p>
-          {% endif %}
+          </a>
         </li>
         {% endfor %}
       {% else %}

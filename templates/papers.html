@@ -3,21 +3,28 @@
 
 {% block content %}
   <div class="mx-auto max-w-5xl">
-    <header class="mb-8 border-b border-slate-200 pb-8">
-      <div class="flex items-center justify-between">
+    <header class="relative mb-8 overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-8 shadow-sm shadow-slate-500/10 backdrop-blur-3xl" data-papers-header>
+      <div class="pointer-events-none absolute inset-0 opacity-25 blur-3xl" aria-hidden="true">
+        <div class="absolute -left-16 -top-16 h-40 w-40 rounded-full bg-slate-300/20"></div>
+        <div class="absolute right-8 top-8 h-32 w-32 rounded-full bg-slate-200/20"></div>
+      </div>
+      <div class="relative flex items-center justify-between">
         <div>
-          <h1 class="text-5xl md:text-6xl font-bold text-slate-900 mb-4 tracking-tight">{{ section.title }}</h1>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="h-8 w-1.5 bg-gradient-to-b from-slate-900 to-slate-600 rounded-full"></div>
+            <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">{{ section.title }}</h1>
+          </div>
           {% if section.extra.description %}
-          <p class="text-xl text-slate-600">{{ section.extra.description }}</p>
+          <p class="text-lg text-slate-700 ml-5">{{ section.extra.description }}</p>
           {% endif %}
         </div>
         <div class="flex flex-col gap-2 items-end">
           {# 第一行：第一作者和通讯作者按钮 #}
           <div class="flex flex-wrap gap-2 justify-end">
-            <button class="pill-button rounded-full border-2 border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-900" data-value="first-author" data-type="role-toggle">
+            <button class="pill-button rounded-full border-2 border-white/30 bg-white/20 px-4 py-2 text-sm font-semibold text-slate-700 backdrop-blur-xl transition hover:border-slate-500/60 hover:bg-white/30" data-value="first-author" data-type="role-toggle">
               第一作者
             </button>
-            <button class="pill-button rounded-full border-2 border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-900" data-value="corresponding-author" data-type="role-toggle">
+            <button class="pill-button rounded-full border-2 border-white/30 bg-white/20 px-4 py-2 text-sm font-semibold text-slate-700 backdrop-blur-xl transition hover:border-slate-500/60 hover:bg-white/30" data-value="corresponding-author" data-type="role-toggle">
               通讯作者
             </button>
           </div>
@@ -27,89 +34,92 @@
       </div>
     </header>
 
-    <div id="papers-list">
+    <div id="papers-list" class="space-y-6">
       {% if section.pages and section.pages | length > 0 %}
         {% for paper in section.pages | sort(attribute="date") | reverse %}
-        <article class="group flex w-full gap-8 items-start paper-item" data-venue="{{ paper.extra.venue | default(value='') }}" data-first-author="{{ paper.extra.first_author | default(value='') }}" data-corresponding-author="{{ paper.extra.corresponding_author | default(value='') }}">
-          {# 缩略图 #}
-          {% if paper.extra.image %}
-          <div class="flex-shrink-0 w-96 aspect-video self-center">
-            <a href="{{ paper.permalink }}" class="block w-full h-full">
-              <img src="{{ paper.extra.image }}" alt="{{ paper.title }}" class="w-full h-full object-cover rounded-lg border border-slate-200 transition hover:border-slate-400" loading="lazy" />
-            </a>
-          </div>
-          {% endif %}
-          
-          {# 内容区域 #}
-          <div class="flex-1 min-w-0">
-            {# 论文标题 #}
-            <h2 class="text-3xl font-bold text-slate-900 mb-4 leading-tight">
-              <a href="{{ paper.permalink }}" class="hover:text-slate-600 transition">{{ paper.title }}</a>
-            </h2>
-            
-            {# 会议/期刊信息 #}
-            <div class="flex flex-wrap items-center gap-3 mb-6">
-              {% if paper.extra.venue %}
-              <span class="text-base font-semibold text-slate-900">{{ paper.extra.venue }}</span>
-              {% endif %}
-              {% if paper.date %}
-              {% if paper.extra.venue %}
-              <span class="text-slate-400">•</span>
-              {% endif %}
-              <span class="text-base text-slate-600">{{ paper.date | date(format="%Y年%m月") }}</span>
-              {% endif %}
-            </div>
-            
-            {# 摘要 #}
-            {% if paper.summary or paper.extra.abstract %}
-            <div class="mb-6">
-              <p class="text-base leading-relaxed text-slate-700 line-clamp-3">{{ paper.extra.abstract | default(value=paper.summary) }}</p>
-            </div>
-            {% endif %}
-            
-            {# 链接按钮区域 #}
-            <div class="flex flex-wrap gap-3">
-            {% if paper.extra.url %}
-            <a class="inline-flex items-center gap-2 rounded-md bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800" href="{{ paper.extra.url }}" target="_blank" rel="noopener noreferrer">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-              Paper
-            </a>
-            {% endif %}
-            {% if paper.extra.arxiv %}
-            <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ paper.extra.arxiv }}" target="_blank" rel="noopener noreferrer">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-              arXiv
-            </a>
-            {% endif %}
-            {% if paper.extra.code %}
-            <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ paper.extra.code }}" target="_blank" rel="noopener noreferrer">
-              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-              Code
-            </a>
-            {% endif %}
-            {% if paper.extra.project %}
-            <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ paper.extra.project }}" target="_blank" rel="noopener noreferrer">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
-              Project Page
-            </a>
-            {% endif %}
-            {% if paper.extra.video %}
-            <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ paper.extra.video }}" target="_blank" rel="noopener noreferrer">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              Video
-            </a>
-            {% endif %}
-            </div>
+        <article class="group relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition hover:bg-white/25 hover:border-cyan-300/40 paper-item" data-venue="{{ paper.extra.venue | default(value='') }}" data-first-author="{{ paper.extra.first_author | default(value='') }}" data-corresponding-author="{{ paper.extra.corresponding_author | default(value='') }}">
+          <div class="pointer-events-none absolute inset-0 opacity-20 blur-3xl" aria-hidden="true">
+            <div class="absolute -left-12 -top-12 h-32 w-32 rounded-full bg-gradient-to-br from-slate-200/25 to-slate-50/15"></div>
+            <div class="absolute -right-12 -bottom-12 h-32 w-32 rounded-full bg-gradient-to-br from-slate-300/20 to-slate-200/15"></div>
           </div>
           
+          <div class="relative flex w-full gap-6 p-6">
+            {# 缩略图 #}
+            {% if paper.extra.image %}
+            <div class="flex-shrink-0 w-80 aspect-video self-start">
+              <a href="{{ paper.permalink }}" class="block w-full h-full">
+                <img src="{{ paper.extra.image }}" alt="{{ paper.title }}" class="w-full h-full object-cover rounded-2xl border border-white/30 shadow-md shadow-slate-500/10 transition hover:border-slate-400/60 hover:shadow-lg hover:shadow-slate-500/25" loading="lazy" />
+              </a>
+            </div>
+            {% endif %}
+            
+            {# 内容区域 #}
+            <div class="flex-1 min-w-0">
+              {# 论文标题 #}
+              <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-3 leading-tight">
+                <a href="{{ paper.permalink }}" class="hover:text-cyan-700 transition">{{ paper.title }}</a>
+              </h2>
+              
+              {# 会议/期刊信息 #}
+              <div class="flex flex-wrap items-center gap-2 mb-4">
+                {% if paper.extra.venue %}
+                <span class="venue-badge rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-700 backdrop-blur-xl" data-venue-badge="{{ paper.extra.venue }}">{{ paper.extra.venue }}</span>
+                {% endif %}
+                {% if paper.date %}
+                <span class="text-sm text-slate-600">{{ paper.date | date(format="%Y年%m月") }}</span>
+                {% endif %}
+              </div>
+              
+              {# 摘要 #}
+              {% if paper.summary or paper.extra.abstract %}
+              <div class="mb-5">
+                <p class="text-sm leading-relaxed text-slate-700 line-clamp-3">{{ paper.extra.abstract | default(value=paper.summary) }}</p>
+              </div>
+              {% endif %}
+              
+              {# 链接按钮区域 #}
+              <div class="flex flex-wrap gap-2">
+              {% if paper.extra.url %}
+              <a class="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-slate-900 to-slate-700 px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-slate-500/30 transition hover:shadow-md hover:shadow-slate-500/40 hover:from-slate-950 hover:to-slate-800" href="{{ paper.extra.url }}" target="_blank" rel="noopener noreferrer">
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                Paper
+              </a>
+              {% endif %}
+              {% if paper.extra.arxiv %}
+              <a class="inline-flex items-center gap-1.5 rounded-full border-2 border-white/30 bg-white/20 px-4 py-2 text-xs font-semibold text-slate-700 backdrop-blur-xl transition hover:border-slate-500/60 hover:bg-white/30" href="{{ paper.extra.arxiv }}" target="_blank" rel="noopener noreferrer">
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                arXiv
+              </a>
+              {% endif %}
+              {% if paper.extra.code %}
+              <a class="inline-flex items-center gap-1.5 rounded-full border-2 border-white/30 bg-white/20 px-4 py-2 text-xs font-semibold text-slate-700 backdrop-blur-xl transition hover:border-slate-500/60 hover:bg-white/30" href="{{ paper.extra.code }}" target="_blank" rel="noopener noreferrer">
+                <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                Code
+              </a>
+              {% endif %}
+              {% if paper.extra.project %}
+              <a class="inline-flex items-center gap-1.5 rounded-full border-2 border-white/30 bg-white/20 px-4 py-2 text-xs font-semibold text-slate-700 backdrop-blur-xl transition hover:border-slate-500/60 hover:bg-white/30" href="{{ paper.extra.project }}" target="_blank" rel="noopener noreferrer">
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                Project
+              </a>
+              {% endif %}
+              {% if paper.extra.video %}
+              <a class="inline-flex items-center gap-1.5 rounded-full border-2 border-white/30 bg-white/20 px-4 py-2 text-xs font-semibold text-slate-700 backdrop-blur-xl transition hover:border-slate-500/60 hover:bg-white/30" href="{{ paper.extra.video }}" target="_blank" rel="noopener noreferrer">
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Video
+              </a>
+              {% endif %}
+              </div>
+            </div>
+          </div>
         </article>
-        {% if not loop.last %}
-        <div class="paper-divider my-8 border-t border-slate-200"></div>
-        {% endif %}
         {% endfor %}
       {% else %}
-        <div class="rounded-lg border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-          <p class="text-lg text-slate-600">暂无论文发布</p>
+        <div class="relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-8 py-16 shadow-sm shadow-slate-500/10 backdrop-blur-3xl text-center">
+          <div class="pointer-events-none absolute inset-0 opacity-20 blur-3xl" aria-hidden="true">
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-32 w-32 rounded-full bg-slate-300/20"></div>
+          </div>
+          <p class="relative text-lg text-slate-600">暂无论文发布</p>
         </div>
       {% endif %}
     </div>
@@ -118,6 +128,36 @@
   <script>
     // 当前用户名
     const currentUserName = "{{ config.extra.name }}".split(' ')[0];
+
+    // 期刊颜色调色盘（彩色），索引由期刊名hash决定
+    const venuePalettes = [
+      { pillSelected: ['bg-gradient-to-r','from-cyan-500','to-blue-500','text-white','shadow-md','shadow-cyan-400/40'], badge: ['bg-gradient-to-r','from-cyan-200/60','to-blue-200/60','border','border-cyan-300/60','text-cyan-800'], hover: 'hover:border-cyan-400/60' },
+      { pillSelected: ['bg-gradient-to-r','from-amber-500','to-orange-500','text-white','shadow-md','shadow-amber-400/40'], badge: ['bg-gradient-to-r','from-amber-200/60','to-orange-200/60','border','border-amber-300/60','text-amber-800'], hover: 'hover:border-amber-400/60' },
+      { pillSelected: ['bg-gradient-to-r','from-emerald-500','to-teal-500','text-white','shadow-md','shadow-emerald-400/40'], badge: ['bg-gradient-to-r','from-emerald-200/60','to-teal-200/60','border','border-emerald-300/60','text-emerald-800'], hover: 'hover:border-emerald-400/60' },
+      { pillSelected: ['bg-gradient-to-r','from-rose-500','to-pink-500','text-white','shadow-md','shadow-rose-400/40'], badge: ['bg-gradient-to-r','from-rose-200/60','to-pink-200/60','border','border-rose-300/60','text-rose-800'], hover: 'hover:border-rose-400/60' },
+      { pillSelected: ['bg-gradient-to-r','from-indigo-500','to-slate-600','text-white','shadow-md','shadow-indigo-400/40'], badge: ['bg-gradient-to-r','from-indigo-200/60','to-slate-200/60','border','border-indigo-300/60','text-indigo-800'], hover: 'hover:border-indigo-400/60' },
+      { pillSelected: ['bg-gradient-to-r','from-lime-500','to-green-500','text-white','shadow-md','shadow-lime-400/40'], badge: ['bg-gradient-to-r','from-lime-200/60','to-green-200/60','border','border-lime-300/60','text-lime-800'], hover: 'hover:border-lime-400/60' }
+    ];
+    const allPillSelectedClasses = Array.from(new Set(venuePalettes.flatMap(p => p.pillSelected)));
+    const allBadgeClasses = Array.from(new Set(venuePalettes.flatMap(p => p.badge)));
+
+    function hashVenue(venue) {
+      return venue.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    }
+
+    function getVenuePaletteIndex(venue) {
+      return venuePalettes.length === 0 ? 0 : Math.abs(hashVenue(venue)) % venuePalettes.length;
+    }
+
+    function applyVenueBadgeColors() {
+      const badges = document.querySelectorAll('[data-venue-badge]');
+      badges.forEach(badge => {
+        const venue = badge.dataset.venueBadge || '';
+        const palette = venuePalettes[getVenuePaletteIndex(venue)];
+        badge.classList.remove(...allBadgeClasses);
+        badge.classList.add(...palette.badge);
+      });
+    }
     
     // 初始化筛选器选项
     function initializeFilters() {
@@ -133,13 +173,16 @@
       // 创建期刊胶囊按钮
       const venueContainer = document.getElementById('venue-filter-group');
       
-      // 添加期刊按钮，支持toggle
+      // 添加期刊按钮，支持toggle（期刊使用彩色）
       Array.from(venues).sort().forEach(venue => {
+        const paletteIndex = getVenuePaletteIndex(venue);
+        const palette = venuePalettes[paletteIndex];
         const button = document.createElement('button');
-        button.className = 'pill-button rounded-full border-2 border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-900';
+        button.className = `pill-button rounded-full border-2 border-white/30 bg-white/20 px-4 py-2 text-sm font-semibold text-slate-700 backdrop-blur-xl transition hover:bg-white/30 ${palette.hover}`;
         button.textContent = venue;
         button.dataset.value = venue;
         button.dataset.type = 'venue-toggle';
+        button.dataset.paletteIndex = String(paletteIndex);
         button.addEventListener('click', () => selectVenueButton(button));
         venueContainer.appendChild(button);
       });
@@ -153,26 +196,35 @@
     // 选择角色按钮 - toggle模式（点击已选中即取消）
     function selectRoleButton(button) {
       // 切换当前按钮状态
-      if (button.classList.contains('bg-slate-900')) {
-        button.classList.remove('border-slate-900', 'bg-slate-900', 'text-white');
-        button.classList.add('border-slate-300', 'bg-white', 'text-slate-700');
+      if (button.classList.contains('from-slate-900')) {
+        button.classList.remove('bg-gradient-to-r', 'from-slate-900', 'to-slate-700', 'text-white', 'shadow-md', 'shadow-slate-700/40');
+        button.classList.add('border-white/30', 'bg-white/20', 'text-slate-700');
       } else {
-        button.classList.remove('border-slate-300', 'bg-white', 'text-slate-700');
-        button.classList.add('border-slate-900', 'bg-slate-900', 'text-white');
+        button.classList.remove('border-white/30', 'bg-white/20', 'text-slate-700');
+        button.classList.add('bg-gradient-to-r', 'from-slate-900', 'to-slate-700', 'text-white', 'shadow-md', 'shadow-slate-700/40');
       }
       
       applyFilters();
     }
 
-    // 选择期刊按钮 - toggle模式
+    function clearVenueSelection() {
+      document.querySelectorAll('[data-type="venue-toggle"]').forEach(btn => {
+        btn.classList.remove('venue-selected', ...allPillSelectedClasses);
+        btn.classList.add('border-white/30', 'bg-white/20', 'text-slate-700');
+      });
+    }
+
+    // 选择期刊按钮 - 单选toggle（彩色选中态）
     function selectVenueButton(button) {
-      // 切换当前按钮状态
-      if (button.classList.contains('bg-slate-900')) {
-        button.classList.remove('border-slate-900', 'bg-slate-900', 'text-white');
-        button.classList.add('border-slate-300', 'bg-white', 'text-slate-700');
+      const palette = venuePalettes[Number(button.dataset.paletteIndex) || 0];
+      const isSelected = button.classList.contains('venue-selected');
+
+      if (isSelected) {
+        clearVenueSelection();
       } else {
-        button.classList.remove('border-slate-300', 'bg-white', 'text-slate-700');
-        button.classList.add('border-slate-900', 'bg-slate-900', 'text-white');
+        clearVenueSelection();
+        button.classList.remove('border-white/30', 'bg-white/20', 'text-slate-700');
+        button.classList.add('venue-selected', ...palette.pillSelected);
       }
       
       applyFilters();
@@ -182,12 +234,12 @@
     function applyFilters() {
       // 获取所有选中的角色按钮
       const selectedRoles = Array.from(document.querySelectorAll('[data-type="role-toggle"]'))
-        .filter(btn => btn.classList.contains('bg-slate-900'))
+        .filter(btn => btn.classList.contains('from-slate-900'))
         .map(btn => btn.dataset.value);
       
-      // 获取所有选中的期刊
+      // 获取所有选中的期刊（带选中标记）
       const selectedVenues = Array.from(document.querySelectorAll('[data-type="venue-toggle"]'))
-        .filter(btn => btn.classList.contains('bg-slate-900'))
+        .filter(btn => btn.classList.contains('venue-selected'))
         .map(btn => btn.dataset.value);
       
       const papers = Array.from(document.querySelectorAll('.paper-item'));
@@ -217,26 +269,16 @@
         }
       });
 
-      // 重新生成分割线：仅在可见文章之间插入，先移除旧的再插入新的
-      document.querySelectorAll('.paper-divider').forEach(div => div.remove());
-      const visiblePapers = papers.filter(p => p.style.display !== 'none');
-      if (visiblePapers.length > 1) {
-        for (let i = 0; i < visiblePapers.length - 1; i++) {
-          const divider = document.createElement('div');
-          divider.className = 'paper-divider my-8 border-t border-slate-200';
-          visiblePapers[i].insertAdjacentElement('afterend', divider);
-        }
-      }
-
       // 显示无结果提示
+      const visiblePapers = papers.filter(p => p.style.display !== 'none');
       const container = document.getElementById('papers-list');
       let noResults = document.getElementById('no-results');
       if (visiblePapers.length === 0) {
         if (!noResults) {
           noResults = document.createElement('div');
           noResults.id = 'no-results';
-          noResults.className = 'rounded-lg border border-slate-200 bg-slate-50 px-8 py-16 text-center';
-          noResults.innerHTML = '<p class="text-lg text-slate-600">未找到匹配的论文</p>';
+          noResults.className = 'relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-8 py-16 shadow-sm shadow-slate-500/10 backdrop-blur-3xl text-center';
+          noResults.innerHTML = '<div class="pointer-events-none absolute inset-0 opacity-20 blur-3xl" aria-hidden="true"><div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-32 w-32 rounded-full bg-slate-300/20"></div></div><p class="relative text-lg text-slate-600">未找到匹配的论文</p>';
           container.appendChild(noResults);
         }
         noResults.style.display = '';
@@ -248,5 +290,6 @@
     // 页面加载时初始化
     initializeFilters();
     applyFilters();
+    applyVenueBadgeColors();
   </script>
 {% endblock content %}

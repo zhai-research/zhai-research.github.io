@@ -8,7 +8,7 @@
 {% elif term %}
   {% set entity = term %}
 {% endif %}
-{% set lang_code = "zh" %}
+{% set lang_code = config.default_language | default(value="zh") %}
 {% if entity and entity.lang %}
   {% set lang_code = entity.lang %}
 {% endif %}
@@ -25,17 +25,68 @@
   {% set nav_about = "关于我" %}
   {% set nav_profile = "学术主页" %}
 {% endif %}
+{% set site_title_fallback = config.extra.name | default(value=nav_profile) %}
+{% set site_title = config.title | default(value=site_title_fallback) %}
+{% set page_title = site_title %}
+{% if entity and entity.title %}
+  {% set page_title = entity.title ~ " · " ~ site_title %}
+{% endif %}
+{% set meta_description = "" %}
+{% if entity and entity.description %}
+  {% set meta_description = entity.description %}
+{% elif config.description %}
+  {% set meta_description = config.description %}
+{% elif config.extra.role %}
+  {% set meta_description = config.extra.role %}
+{% elif config.extra.affiliation %}
+  {% set meta_description = config.extra.affiliation %}
+{% endif %}
+{% set canonical_url = "" %}
+{% if entity and entity.permalink %}
+  {% set canonical_url = entity.permalink %}
+{% endif %}
+{% set current_path = current_path | default(value="/") %}
+{% set is_home = current_path == "/" %}
+{% set is_papers = current_path is starting_with("/papers") %}
+{% set is_blog = current_path is starting_with("/blog") %}
+{% set about_href = "/#about" %}
+{% if is_home %}
+  {% set about_href = "#about" %}
+{% endif %}
+{% set nav_base = "rounded-full px-3 py-2 transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60" %}
+{% set nav_active = "bg-white/30 text-cyan-700 shadow-sm shadow-cyan-500/20" %}
+{% set nav_inactive = "hover:bg-white/25 hover:text-cyan-700" %}
 <html lang="{{ lang_code }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% if entity and entity.title %}{{ entity.title }} · {{ nav_profile }}{% else %}{{ nav_profile }}{% endif %}</title>
-    {% if entity and entity.description %}
-    <meta name="description" content="{{ entity.description }}" />
+    <title>{{ page_title }}</title>
+    {% if meta_description != "" %}
+    <meta name="description" content="{{ meta_description }}" />
     {% endif %}
-    <meta property="og:title" content="{% if entity and entity.title %}{{ entity.title }}{% else %}{{ nav_profile }}{% endif %}" />
+    {% if config.extra.name %}
+    <meta name="author" content="{{ config.extra.name }}" />
+    {% endif %}
+    {% if canonical_url != "" %}
+    <link rel="canonical" href="{{ canonical_url }}" />
+    {% endif %}
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#e6f4ff" />
+    <meta property="og:site_name" content="{{ site_title }}" />
+    <meta property="og:title" content="{% if entity and entity.title %}{{ entity.title }}{% else %}{{ site_title }}{% endif %}" />
+    {% if meta_description != "" %}
+    <meta property="og:description" content="{{ meta_description }}" />
+    {% endif %}
+    {% if canonical_url != "" %}
+    <meta property="og:url" content="{{ canonical_url }}" />
+    {% endif %}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="{{ lang_code }}" />
+    <meta name="twitter:card" content="summary" />
+    {% if config.generate_feed %}
+    <link rel="alternate" type="application/rss+xml" title="{{ site_title }}" href="{{ get_url(path="rss.xml") }}" />
+    {% endif %}
+    <link rel="preload" as="style" href="{{ get_url(path='tailwind.css') }}">
     <link rel="stylesheet" href="{{ get_url(path='tailwind.css') }}">
     <script>
       if (!window.location.hash && 'scrollRestoration' in history) {
@@ -44,30 +95,37 @@
       }
     </script>
   </head>
-  <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-cyan-50/30 text-slate-900">
-    <div class="mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6">
-      {% set is_home = current_path == "/" or current_path == "" %}
-      <header class="site-header group/header sticky top-4 z-20 w-full transition-all duration-[800ms] ease-in-out {% if not is_home %}bg-white/20 border border-white/30 rounded-3xl px-4 py-3 shadow-[0_10px_40px_-18px_rgba(34,211,238,0.2)] backdrop-blur-2xl{% endif %}">
-        <div class="flex flex-col items-center justify-center gap-3 md:flex-row">
-          <div class="nav-container relative flex w-full flex-wrap items-center {% if is_home %}justify-center{% else %}justify-between{% endif %} gap-3">
-            <div class="header-name {% if is_home %}absolute left-0 top-1/2{% endif %} flex items-center gap-2 rounded-full bg-white/15 border border-white/25 px-3 py-1 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition-all duration-[800ms] ease-in-out will-change-transform {% if is_home %}opacity-0{% else %}opacity-100{% endif %}" style="{% if is_home %}transform: translate(-6px, -50%) scale(0.96); filter: blur(2px); pointer-events: none;{% else %}pointer-events: auto;{% endif %}">
-              <span class="text-cyan-700">{{ config.extra.name }}</span>
-              {% if config.extra.role %}
-              <span class="text-slate-500" aria-hidden="true">•</span>
-              <span class="text-slate-700">{{ config.extra.role }}</span>
-              {% endif %}
-            </div>
-            <nav class="nav-wrap flex flex-wrap items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition-transform duration-[800ms] ease-in-out will-change-transform">
-              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="/">{{ nav_home }}</a>
-              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="/papers">{{ nav_papers }}</a>
-              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="/blog">{{ nav_diary }}</a>
-              <a class="rounded-full px-3 py-2 transition duration-300 hover:bg-white/25 hover:text-cyan-700" href="#about">{{ nav_about }}</a>
+  <body class="min-h-screen bg-slate-50 text-slate-900">
+    <div class="pointer-events-none fixed inset-0 -z-10">
+      <div class="absolute -top-24 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-cyan-200/60 blur-3xl"></div>
+      <div class="absolute top-36 -left-10 h-64 w-64 rounded-full bg-orange-200/40 blur-3xl"></div>
+      <div class="absolute -bottom-24 right-10 h-72 w-72 rounded-full bg-emerald-200/50 blur-3xl"></div>
+    </div>
+    <a class="sr-only focus:not-sr-only focus:rounded-full focus:bg-white/80 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900 focus:shadow-lg" href="#main-content">Skip to content</a>
+    <div class="mx-auto max-w-6xl px-4 pb-12 pt-0 sm:px-6">
+      <header class="sticky top-0 z-20 w-full px-2 py-2">
+        <div class="header-shell relative flex w-full flex-nowrap items-center justify-between gap-3 overflow-visible rounded-3xl bg-white/25 px-3 py-3 shadow-[0_20px_60px_-28px_rgba(56,189,248,0.4),0_12px_28px_-18px_rgba(15,23,42,0.3)] ring-1 ring-white/50 backdrop-blur-3xl backdrop-saturate-150 will-change-transform sm:overflow-hidden sm:px-4 sm:py-3.5">
+          <span class="header-quote header-fade origin-left min-w-0 flex-1 truncate whitespace-nowrap text-base font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-cyan-600 to-blue-700 drop-shadow-[0_1px_2px_rgba(14,116,144,0.35)] will-change-transform sm:text-lg">永远相信美好的事情即将发生</span>
+          <details class="mobile-menu relative flex-shrink-0 sm:hidden">
+            <summary class="header-menu header-fade list-none cursor-pointer rounded-full bg-white/25 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 ring-1 ring-white/40 backdrop-blur-2xl hover:bg-white/30 hover:text-cyan-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60">菜单</summary>
+            <nav class="absolute right-0 top-full z-30 mt-2 flex w-44 flex-col gap-1 rounded-2xl bg-white/80 p-2 text-sm font-semibold text-slate-800 shadow-[0_20px_40px_-24px_rgba(15,23,42,0.45)] ring-1 ring-white/50 backdrop-blur-2xl backdrop-saturate-150" aria-label="Primary">
+              <button class="menu-close w-full rounded-xl bg-white/70 px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600 transition duration-300 hover:text-cyan-700" type="button">收起</button>
+              <a class="{{ nav_base }} {% if is_home %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}" href="/" {% if is_home %}aria-current="page"{% endif %}>{{ nav_home }}</a>
+              <a class="{{ nav_base }} {% if is_papers %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}" href="/papers" {% if is_papers %}aria-current="page"{% endif %}>{{ nav_papers }}</a>
+              <a class="{{ nav_base }} {% if is_blog %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}" href="/blog" {% if is_blog %}aria-current="page"{% endif %}>{{ nav_diary }}</a>
+              <a class="{{ nav_base }} {{ nav_inactive }}" href="{{ about_href }}">{{ nav_about }}</a>
             </nav>
-          </div>
+          </details>
+          <nav class="header-nav header-fade origin-right hidden flex-shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-white/20 px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 ring-1 ring-white/40 backdrop-blur-2xl backdrop-saturate-150 will-change-transform sm:flex" aria-label="Primary">
+            <a class="{{ nav_base }} {% if is_home %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}" href="/" {% if is_home %}aria-current="page"{% endif %}>{{ nav_home }}</a>
+            <a class="{{ nav_base }} {% if is_papers %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}" href="/papers" {% if is_papers %}aria-current="page"{% endif %}>{{ nav_papers }}</a>
+            <a class="{{ nav_base }} {% if is_blog %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}" href="/blog" {% if is_blog %}aria-current="page"{% endif %}>{{ nav_diary }}</a>
+            <a class="{{ nav_base }} {{ nav_inactive }}" href="{{ about_href }}">{{ nav_about }}</a>
+          </nav>
         </div>
       </header>
 
-      <main class="pt-4">
+      <main id="main-content" class="pt-4" tabindex="-1">
         {% block content %}{% endblock %}
       </main>
 
@@ -80,46 +138,88 @@
     </div>
     <script>
       (() => {
-        if (!window.location.hash) window.scrollTo(0, 0);
+        const shell = document.querySelector('.header-shell');
+        if (!shell) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const fadeTargets = shell.querySelectorAll('.header-fade');
 
-        const heroName = document.querySelector('.hero h1');
-        const header = document.querySelector('.site-header');
-        const nav = document.querySelector('.nav-wrap');
-        const headerName = document.querySelector('.header-name');
-        
-        // 如果不在首页或没有hero元素，直接返回，不执行任何动画
-        if (!heroName || !header || !nav || !headerName) return;
-        
-        const updateShift = () => {
-          const headerRect = header.getBoundingClientRect();
-          const navRect = nav.getBoundingClientRect();
-          const target = Math.max(0, (headerRect.width - navRect.width) / 2 - 16);
-          nav.dataset.shift = target.toFixed(1);
+        let rafId = null;
+        const current = {
+          shellScale: 1,
+          shellOffset: 16,
+          fade: 1,
         };
 
-        const updateState = () => {
-          const headerRect = header.getBoundingClientRect();
-          const top = heroName.getBoundingClientRect().top - headerRect.top;
-          const start = headerRect.height || 1;
-          const raw = Math.min(1, Math.max(0, (start - top) / start));
-          const eased = Math.min(1, Math.max(0, (raw - 0.2) / 0.8));
-          header.classList.toggle('show-personal', eased > 0.001);
+        const lerp = (from, to, t) => from + (to - from) * t;
+        const isClose = (a, b) => Math.abs(a - b) < 0.001;
+        const computeTarget = () => {
+          const scrollY = window.scrollY || 0;
+          const scrollProgress = Math.min(1, Math.max(0, scrollY / 220));
+          const eased = 1 - Math.pow(1 - scrollProgress, 2);
+          const stickyProgress = Math.min(1, scrollY / 16);
+          const stickyEase = 1 - Math.pow(1 - stickyProgress, 2);
+          const shellScale = 1 - eased * 0.42;
+          const shellOffset = (1 - stickyEase) * 16;
+          const fade = Math.max(0, 1 - eased);
 
-          // Header name animation
-          headerName.style.opacity = eased.toFixed(3);
-          headerName.style.transform = `translate(-6px, -50%) scale(${(0.96 + 0.04 * eased).toFixed(3)})`;
-          headerName.style.filter = `blur(${(2 * (1 - eased)).toFixed(2)}px)`;
-          headerName.style.pointerEvents = eased > 0.001 ? 'auto' : 'none';
-
-          // Nav glide based on computed shift
-          const shift = parseFloat(nav.dataset.shift || '140');
-          nav.style.transform = `translateX(${(shift * eased).toFixed(2)}px)`;
+          return { shellScale, shellOffset, fade };
         };
 
-        updateShift();
-        window.addEventListener('scroll', updateState, { passive: true });
-        window.addEventListener('resize', () => { updateShift(); updateState(); }, { passive: true });
-        window.addEventListener('load', () => { updateShift(); updateState(); }, { once: true });
+        shell.style.transformOrigin = 'center top';
+
+        const apply = () => {
+          rafId = null;
+          const target = computeTarget();
+
+          const smoothing = 0.15;
+          current.shellScale = lerp(current.shellScale, target.shellScale, smoothing);
+          current.shellOffset = lerp(current.shellOffset, target.shellOffset, smoothing);
+          current.fade = lerp(current.fade, target.fade, smoothing);
+          shell.style.transform = `translateZ(0) translateY(${current.shellOffset.toFixed(2)}px) scale(${current.shellScale.toFixed(3)})`;
+          fadeTargets.forEach((target) => {
+            target.style.opacity = current.fade.toFixed(3);
+          });
+
+          const settled = isClose(current.shellScale, target.shellScale)
+            && isClose(current.shellOffset, target.shellOffset)
+            && isClose(current.fade, target.fade);
+
+          if (!settled) schedule();
+        };
+
+        const schedule = () => {
+          if (rafId) return;
+          rafId = requestAnimationFrame(apply);
+        };
+
+        const initialTarget = computeTarget();
+        current.shellScale = initialTarget.shellScale;
+        current.shellOffset = initialTarget.shellOffset;
+        current.fade = initialTarget.fade;
+        apply();
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule, { passive: true });
+        window.addEventListener('load', schedule, { once: true });
+      })();
+    </script>
+    <script>
+      (() => {
+        const menu = document.querySelector('.mobile-menu');
+        if (!menu) return;
+        const closeBtn = menu.querySelector('.menu-close');
+        const links = menu.querySelectorAll('a');
+        const closeMenu = () => {
+          menu.removeAttribute('open');
+          const summary = menu.querySelector('summary');
+          if (summary) summary.focus();
+        };
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', closeMenu);
+        }
+        links.forEach((link) => {
+          link.addEventListener('click', closeMenu);
+        });
       })();
     </script>
   </body>
