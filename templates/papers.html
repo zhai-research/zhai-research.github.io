@@ -2,6 +2,8 @@
 {% import "macros.html" as macros %}
 
 {% block content %}
+  {% set home_section = get_section(path="_index.md") %}
+  {% set profile = home_section.extra %}
   <div class="mx-auto max-w-5xl">
     <header class="relative mb-8 overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-8 shadow-sm shadow-slate-500/10 backdrop-blur-3xl" data-papers-header>
       <div class="pointer-events-none absolute inset-0 opacity-25 blur-3xl" aria-hidden="true">
@@ -127,7 +129,7 @@
 
   <script>
     // 当前用户名
-    const currentUserName = "{{ config.extra.name }}".split(' ')[0];
+    const currentUserName = "{{ profile.name }}".split(' ')[0];
 
     // 期刊颜色调色盘（彩色），索引由期刊名hash决定
     const venuePalettes = [

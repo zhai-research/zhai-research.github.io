@@ -8,15 +8,17 @@ entity.lang %} {% endif %} {% if lang_code == "en" %} {% set nav_home = "Home"
 nav_about = "About" %} {% set nav_profile = "Academic Profile" %} {% else %} {%
 set nav_home = "首页" %} {% set nav_papers = "研究" %} {% set nav_diary = "博客"
 %} {% set nav_about = "关于我" %} {% set nav_profile = "学术主页" %} {% endif %}
-{% set site_title_fallback = config.extra.name | default(value=nav_profile) %}
+{% set home_section = get_section(path="_index.md") %} {% set profile =
+home_section.extra %} {% set site_title_fallback = profile.name |
+default(value=nav_profile) %}
 {% set site_title = config.title | default(value=site_title_fallback) %} {% set
 page_title = site_title %} {% if entity and entity.title %} {% set page_title =
 entity.title ~ " · " ~ site_title %} {% endif %} {% set meta_description = "" %}
 {% if entity and entity.description %} {% set meta_description =
 entity.description %} {% elif config.description %} {% set meta_description =
-config.description %} {% elif config.extra.role %} {% set meta_description =
-config.extra.role %} {% elif config.extra.affiliation %} {% set meta_description
-= config.extra.affiliation %} {% endif %} {% set canonical_url = "" %} {% if
+config.description %} {% elif profile.role %} {% set meta_description =
+profile.role %} {% elif profile.affiliation %} {% set meta_description =
+profile.affiliation %} {% endif %} {% set canonical_url = "" %} {% if
 entity and entity.permalink %} {% set canonical_url = entity.permalink %} {%
 endif %} {% set current_path = current_path | default(value="/") %} {% set
 is_home = current_path == "/" %} {% set is_papers = current_path is
@@ -34,8 +36,8 @@ text-cyan-700 shadow-sm shadow-cyan-500/20" %} {% set nav_inactive =
     <title>{{ page_title }}</title>
     {% if meta_description != "" %}
     <meta name="description" content="{{ meta_description }}" />
-    {% endif %} {% if config.extra.name %}
-    <meta name="author" content="{{ config.extra.name }}" />
+    {% endif %} {% if profile.name %}
+    <meta name="author" content="{{ profile.name }}" />
     {% endif %} {% if canonical_url != "" %}
     <link rel="canonical" href="{{ canonical_url }}" />
     {% endif %}
@@ -208,12 +210,12 @@ will-change-transform sm:text-lg">
       <footer
         class="mt-9 flex flex-col items-start justify-between gap-2 text-sm text-slate-600 sm:flex-row sm:items-center"
       >
-        <span>© {{ now() | date(format="%Y") }} {{ config.extra.name }}</span>
-        {% if config.extra.email %}
+        <span>© {{ now() | date(format="%Y") }} {{ profile.name }}</span>
+        {% if profile.email %}
         <a
           class="font-semibold text-teal-700 hover:underline"
-          href="mailto:{{ config.extra.email }}"
-          >{{ config.extra.email }}</a
+          href="mailto:{{ profile.email }}"
+          >{{ profile.email }}</a
         >
         {% endif %}
       </footer>

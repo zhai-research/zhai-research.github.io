@@ -9,7 +9,6 @@ venue = "Ocean Engineering"
 url = "https://example.com/paper1"
 code = "https://github.com/example/wave-prediction"
 image = "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&h=450&fit=crop"
-abstract = "针对海洋波浪预测的准确性问题，本文提出了一种基于深度时序模型的波高预测方法。该方法结合了LSTM和注意力机制，能够捕捉海浪的长期依赖关系和关键特征。在多个实测数据集上的实验表明，本方法在预测精度和计算效率方面均优于传统方法，RMSE降低了15%以上。"
 bibtex = """@article{zhai2024wave,
   title={基于深度学习的海浪波高预测方法研究},
   author={翟一霖 and 刘明 and 王强},
@@ -18,7 +17,7 @@ bibtex = """@article{zhai2024wave,
 }"""
 +++
 
-## 引言
+## 摘要
 
 海洋波浪预测对于海洋工程、航海安全等领域具有重要意义。本文提出了一种创新的深度学习方法。
 

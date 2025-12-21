@@ -97,7 +97,7 @@
     {% endif %}
 
     {# 主要内容 #}
-    <section class="prose prose-slate prose-lg max-w-none mb-16">
+    <section class="max-w-none mb-16 text-lg leading-relaxed text-slate-700 [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:scroll-mt-24 [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:scroll-mt-24 [&_h3]:text-2xl [&_h3]:font-semibold [&_h3]:text-slate-900 [&_h4]:mt-6 [&_h4]:mb-2 [&_h4]:scroll-mt-24 [&_h4]:text-xl [&_h4]:font-semibold [&_h4]:text-slate-900 [&_p]:my-4 [&_ul]:my-4 [&_ol]:my-4 [&_ul]:pl-6 [&_ol]:pl-6 [&_li]:my-1.5 [&_a]:font-semibold [&_a]:text-cyan-700 [&_a:hover]:underline [&_blockquote]:my-6 [&_blockquote]:border-l-4 [&_blockquote]:border-cyan-300 [&_blockquote]:bg-white/60 [&_blockquote]:pl-4 [&_blockquote]:text-slate-600 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-slate-800 [&_pre]:my-6 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-slate-900 [&_pre]:px-6 [&_pre]:py-5 [&_pre]:text-sm [&_pre]:text-slate-100 [&_pre]:shadow-md [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-sm [&_pre_code]:text-slate-100 [&_table]:my-6 [&_table]:w-full [&_table]:text-sm [&_thead]:bg-slate-100 [&_th]:border [&_th]:border-slate-200 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_td]:border [&_td]:border-slate-200 [&_td]:px-3 [&_td]:py-2 [&_td]:text-left [&_img]:my-6 [&_img]:rounded-lg [&_img]:border [&_img]:border-slate-200" data-markdown-content>
       {{ page.content | safe }}
     </section>
 
@@ -132,4 +132,39 @@
       </a>
     </div>
   </article>
+  <script>
+    (() => {
+      const content = document.querySelector("[data-markdown-content]");
+      if (!content) return;
+      const headings = Array.from(content.querySelectorAll("h2"));
+      headings.forEach((heading) => {
+        const title = heading.textContent.trim().toLowerCase();
+        if (title !== "摘要" && title !== "abstract") return;
+        const next = heading.nextElementSibling;
+        if (next && next.classList.contains("abstract-block")) return;
+
+        const wrapper = document.createElement("div");
+        wrapper.className =
+          "abstract-block mt-4 mb-10 rounded-lg border border-slate-200 bg-slate-50 px-8 py-6 text-lg leading-relaxed text-slate-700";
+
+        let sibling = heading.nextSibling;
+        while (sibling) {
+          const current = sibling;
+          sibling = sibling.nextSibling;
+          if (
+            current.nodeType === Node.ELEMENT_NODE &&
+            current.tagName.toLowerCase() === "h2"
+          ) {
+            break;
+          }
+          if (current.nodeType === Node.TEXT_NODE && !current.textContent.trim()) {
+            continue;
+          }
+          wrapper.appendChild(current);
+        }
+
+        heading.after(wrapper);
+      });
+    })();
+  </script>
 {% endblock content %}

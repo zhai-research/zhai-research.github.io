@@ -4,6 +4,7 @@
 {% block content %}
   {% set entity = page | default(value=section) %}
   {% set lang_code = entity.lang | default(value=config.default_language) %}
+  {% set profile = entity.extra %}
   
   {% if lang_code == "en" %}
     {% set hero_eyebrow = "PhD student profile" %}
@@ -41,38 +42,51 @@
         <div class="absolute right-12 top-8 h-24 w-24 rounded-full bg-cyan-200/35 blur-2xl"></div>
         <div class="absolute inset-x-6 top-2 h-6 rounded-full bg-white/70 blur-md"></div>
       </div>
-      <div class="relative flex items-start gap-4">
-        {% if config.extra.avatar %}
-        <img class="h-20 w-20 rounded-2xl object-cover ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" src="{{ config.extra.avatar }}" alt="{{ config.extra.name }}" loading="lazy" />
-        {% else %}
-        <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 text-lg font-black uppercase text-white ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" aria-label="Avatar">AI</div>
-        {% endif %}
-        <div class="flex-1">
-          <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">{{ config.extra.name }}</h1>
-          {% if config.extra.role %}
-          <p class="mt-1 text-lg font-semibold text-slate-900">{{ config.extra.role }}</p>
+      <div class="relative flex flex-col gap-6">
+        <div class="flex flex-wrap items-start gap-4">
+          {% if profile.avatar %}
+          <img class="h-20 w-20 rounded-2xl object-cover ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" src="{{ profile.avatar }}" alt="{{ profile.name }}" loading="lazy" />
+          {% else %}
+          <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 text-lg font-black uppercase text-white ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" aria-label="Avatar">AI</div>
           {% endif %}
+          <div class="min-w-[12rem] flex-1">
+            <p class="text-xs font-semibold uppercase tracking-[0.34em] text-cyan-700/80">{{ hero_eyebrow }}</p>
+            <h1 class="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">{{ profile.name }}</h1>
+            {% if profile.role %}
+            <p class="mt-1 text-lg font-semibold text-slate-900">{{ profile.role }}</p>
+            {% endif %}
+          </div>
         </div>
-      </div>
-      {% if config.extra.affiliation %}
-      <p class="relative mt-4 text-sm font-semibold text-slate-800">{{ config.extra.affiliation }}</p>
-      {% endif %}
-      {% if config.extra.location %}
-      <p class="relative text-sm text-slate-600">{{ config.extra.location }}</p>
-      {% endif %}
-      <div class="relative mt-5 flex flex-wrap items-center gap-3">
-        {% if config.extra.email %}
-        {{ macros::button(text=hero_email, href="mailto:" ~ config.extra.email, variant="primary") }}
+        {% if profile.affiliation or profile.location %}
+        <dl class="flex flex-wrap gap-3 sm:flex-nowrap">
+          {% if profile.affiliation %}
+          <div class="w-fit rounded-2xl border border-white/30 bg-white/20 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl">
+            <dt class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Affiliation</dt>
+            <dd class="mt-1 text-sm font-semibold text-slate-800">{{ profile.affiliation }}</dd>
+          </div>
+          {% endif %}
+          {% if profile.location %}
+          <div class="w-fit rounded-2xl border border-white/30 bg-white/20 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl">
+            <dt class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Location</dt>
+            <dd class="mt-1 text-sm font-semibold text-slate-800">{{ profile.location }}</dd>
+          </div>
+          {% endif %}
+        </dl>
         {% endif %}
-        {{ macros::button(text=hero_secondary, href="#papers", variant="secondary") }}
+        <div class="flex flex-wrap items-center gap-3">
+          {% if profile.email %}
+          {{ macros::button(text=hero_email, href="mailto:" ~ profile.email, variant="primary") }}
+          {% endif %}
+          {{ macros::button(text=hero_secondary, href="#papers", variant="secondary") }}
+        </div>
+        {% if profile.links %}
+        <div class="flex flex-wrap items-center gap-2">
+          {% for link in profile.links %}
+          <a class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition hover:border-cyan-400/40 hover:text-cyan-700 hover:bg-white/25" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
       </div>
-      {% if config.extra.links %}
-      <div class="relative mt-6 flex flex-wrap items-center gap-2">
-        {% for link in config.extra.links %}
-        <a class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition hover:border-cyan-400/40 hover:text-cyan-700 hover:bg-white/25" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
-        {% endfor %}
-      </div>
-      {% endif %}
     </div>
 
     <div class="relative overflow-hidden rounded-3xl border border-white/30 bg-gradient-to-br from-white/50 via-white/20 to-white/10 px-7 py-8 shadow-[0_18px_50px_-30px_rgba(56,189,248,0.3),0_10px_24px_-16px_rgba(15,23,42,0.25)] backdrop-blur-[28px]">
@@ -88,20 +102,20 @@
           <h3 class="text-lg font-bold text-slate-900">{{ bio_title }}</h3>
         </div>
       </div>
-      {% if config.extra.research_bio %}
+      {% if profile.research_bio %}
       <div class="relative mt-4 prose prose-sm prose-slate max-w-none">
-        {{ config.extra.research_bio | safe }}
+        {{ profile.research_bio | safe }}
       </div>
       {% else %}
       <p class="relative mt-4 text-sm leading-relaxed text-slate-700">
         {{ lang_code == "en" and "I am a PhD student focusing on multimodal AI and data-efficient learning. My research explores robust representations for vision-language alignment, with applications in video understanding and cross-modal retrieval." or "我是一名博士研究生，研究方向为多模态人工智能与数据高效学习。我的研究探索视觉-语言对齐的鲁棒表征方法，并应用于视频理解和跨模态检索等领域。" }}
       </p>
       {% endif %}
-      {% if config.extra.research_highlights %}
+      {% if profile.research_highlights %}
       <div class="relative mt-6 space-y-2">
         <p class="text-sm font-semibold text-slate-700">{{ hero_focus }}</p>
         <div class="flex flex-wrap gap-2">
-          {% for item in config.extra.research_highlights %}
+          {% for item in profile.research_highlights %}
             {% set loop_index = loop.index0 %}
             {% if loop_index % 6 == 0 %}
               <span class="inline-flex items-center rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1.5 text-xs font-semibold text-cyan-700 backdrop-blur-xl">{{ item }}</span>

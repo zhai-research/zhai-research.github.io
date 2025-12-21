@@ -7,7 +7,6 @@ first_author = "翟一霖"
 corresponding_author = "张华"
 venue = "Under Review"
 image = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=800&fit=crop"
-abstract = "研究稀疏观测条件下海洋环境场的智能重建方法。针对海洋观测数据稀疏、分布不均的问题，本文提出了一种结合物理约束与数据驱动技术的重构框架。该方法利用深度神经网络学习环境场的空间分布规律，同时引入海洋动力学方程作为物理约束，有效提升了重构精度与泛化能力。实验表明，在观测点密度仅为5%的情况下，重构误差仍可控制在10%以内。"
 arxiv = "https://arxiv.org/abs/2406.xxxxx"
 +++
 
