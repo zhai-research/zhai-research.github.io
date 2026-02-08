@@ -1,53 +1,40 @@
 {% extends "base.html" %}
-{% import "macros.html" as macros %}
 
 {% block content %}
-  <div class="mx-auto max-w-6xl">
-    <header class="mb-12">
-      <div class="flex items-end gap-4 mb-4">
-        <div class="h-12 w-2 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full"></div>
-        <h1 class="text-5xl font-black text-slate-900">{{ section.title }}</h1>
-      </div>
-      {% if section.extra.description %}
-      <p class="text-xl text-slate-600 ml-6">{{ section.extra.description }}</p>
-      {% endif %}
-    </header>
+  <section class="rounded-3xl border border-slate-300/70 dark:border-slate-700/70 bg-white/75 p-5 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.22)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-38px_rgba(37,99,235,0.3)] dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-35px_rgba(59,130,246,0.30)] dark:motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(59,130,246,0.36)] sm:p-7 motion-reduce:transition-none">
+    <p class="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700 dark:text-blue-300">Blog</p>
+    <h1 class="mt-1.5 font-['Manrope','Noto_Sans_SC',sans-serif] text-2xl font-extrabold text-slate-900 sm:mt-2 sm:text-3xl md:text-4xl dark:text-white">{{ section.title }}</h1>
+    {% if section.extra.description %}<p class="mt-2.5 max-w-2xl text-sm leading-7 text-slate-700 sm:mt-3 sm:text-base dark:text-slate-300">{{ section.extra.description }}</p>{% endif %}
+  </section>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {% if section.pages and section.pages | length > 0 %}
-        {% for post in section.pages | sort(attribute="date") | reverse %}
-        <article class="group rounded-2xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 p-6 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition hover:border-cyan-300/50 hover:shadow-md hover:shadow-cyan-400/20">
-          <div class="flex flex-col gap-4 h-full">
-            <div>
-              <div class="flex items-start justify-between gap-3 mb-3">
-                <h2 class="text-xl font-bold text-slate-900 group-hover:text-cyan-700 transition flex-1">
-                  <a href="{{ post.permalink }}" class="hover:underline">{{ post.title }}</a>
-                </h2>
-                {% if post.date %}
-                <time class="flex-shrink-0 whitespace-nowrap text-xs font-bold text-cyan-700" datetime="{{ post.date }}">{{ post.date | date(format="%Y年%m月") }}</time>
-                {% endif %}
-              </div>
-              
-              {% if post.summary %}
-              <p class="text-sm leading-relaxed text-slate-600 mb-4">{{ post.summary }}</p>
-              {% endif %}
-            </div>
-            
-            {% if post.taxonomies.tags %}
-            <div class="flex flex-wrap gap-2 pt-4 border-t border-white/10 mt-auto">
-              {% for tag in post.taxonomies.tags %}
-              <span class="inline-flex items-center rounded-lg bg-cyan-100/40 border border-cyan-300/40 px-2.5 py-1 text-xs font-bold text-cyan-700">#{{ tag }}</span>
-              {% endfor %}
-            </div>
-            {% endif %}
-          </div>
+  {% if section.pages and section.pages | length > 0 %}
+    <div class="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
+      {% for post in section.pages | sort(attribute="date") | reverse %}
+        <article class="rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-[0_16px_40px_-35px_rgba(15,23,42,0.45)] transition-colors duration-200 motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-[0_22px_48px_-34px_rgba(30,64,175,0.24)] hover:border-blue-600/60 dark:border-slate-700/80 dark:bg-slate-900/60 dark:shadow-[0_20px_50px_-35px_rgba(59,130,246,0.24)] dark:hover:border-blue-300/70 sm:p-6 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:shadow-[0_16px_40px_-35px_rgba(15,23,42,0.45)]">
+          <h2 class="font-['Manrope','Noto_Sans_SC',sans-serif] text-xl font-bold text-slate-900 sm:text-2xl dark:text-white">
+            <a class="inline-flex cursor-pointer rounded-md transition-colors duration-150 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="{{ post.permalink }}">{{ post.title }}</a>
+          </h2>
+          {% if post.date %}<p class="mt-1.5 text-xs font-medium text-slate-500 sm:mt-2 sm:text-sm dark:text-slate-400">{{ post.date | date(format="%Y-%m-%d") }}</p>{% endif %}
+          {% if post.summary %}<p class="mt-3 text-sm leading-7 text-slate-700 sm:mt-4 sm:text-base dark:text-slate-300">{{ post.summary }}</p>{% endif %}
         </article>
-        {% endfor %}
-      {% else %}
-        <div class="col-span-full rounded-2xl border border-dashed border-slate-200 px-8 py-16 text-center">
-          <p class="text-lg text-slate-600">暂无博客文章</p>
-        </div>
-      {% endif %}
+      {% endfor %}
     </div>
-  </div>
+  {% else %}
+    <section class="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white/60 p-5 dark:border-slate-600 dark:bg-slate-900/40 sm:mt-6 sm:p-6">
+      <p class="text-slate-700 dark:text-slate-300">暂无内容。</p>
+    </section>
+  {% endif %}
+
+  <section class="mt-6 rounded-2xl border border-slate-300/70 bg-white/65 p-4 backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_20px_48px_-36px_rgba(30,64,175,0.3)] dark:border-slate-700/70 dark:bg-slate-900/55 dark:motion-safe:hover:shadow-[0_20px_48px_-36px_rgba(59,130,246,0.28)] sm:mt-8 sm:p-5 motion-reduce:transition-none">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">继续浏览研究内容</p>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">查看论文列表或返回首页了解完整研究方向。</p>
+      </div>
+      <div class="flex flex-col gap-2 sm:flex-row">
+        <a class="inline-flex items-center justify-center rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:bg-blue-300 dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/papers/">查看论文</a>
+        <a class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors duration-150 hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-600 dark:text-slate-200 dark:hover:border-blue-300 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/">回到首页</a>
+      </div>
+    </div>
+  </section>
 {% endblock content %}

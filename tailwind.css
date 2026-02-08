@@ -1,4 +1,4 @@
 @import "tailwindcss";
 
-@source "./templates/**/*.{html,tera}";
+@source "./templates/**/*.html";
 @source "./content/**/*.{md,html}";

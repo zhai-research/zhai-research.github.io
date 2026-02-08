@@ -1,170 +1,32 @@
 {% extends "base.html" %}
-{% import "macros.html" as macros %}
 
 {% block content %}
-  <article class="mx-auto max-w-5xl">
-    {# 论文标题 #}
-    <header class="mb-16 text-center border-b border-slate-200 pb-12">
-      <h1 class="text-5xl md:text-6xl font-bold text-slate-900 mb-8 leading-tight tracking-tight">{{ page.title }}</h1>
-      
-      {# 作者信息 #}
-      {% if page.extra.authors %}
-      <div class="text-xl text-slate-700 mb-8 font-medium">
-        {{ page.extra.authors }}
-      </div>
-      {% endif %}
-      
-      {# 会议/期刊信息 #}
-      {% if page.extra.venue %}
-      <div class="text-lg text-slate-600 mb-8">
-        <span class="font-semibold">{{ page.extra.venue }}</span>
-        {% if page.date %}
-        <span class="mx-2">•</span>
-        <span>{{ page.date | date(format="%Y") }}</span>
-        {% endif %}
-      </div>
-      {% endif %}
-      
-      {# 链接按钮 #}
-      <div class="flex flex-wrap items-center justify-center gap-4">
-        {% if page.extra.url %}
-        <a class="inline-flex items-center gap-2 rounded-md bg-slate-900 px-6 py-3 text-base font-semibold text-white transition hover:bg-slate-800" href="{{ page.extra.url }}" target="_blank" rel="noopener noreferrer">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-          Paper
-        </a>
-        {% endif %}
-        {% if page.extra.arxiv %}
-        <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ page.extra.arxiv }}" target="_blank" rel="noopener noreferrer">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-          arXiv
-        </a>
-        {% endif %}
-        {% if page.extra.code %}
-        <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ page.extra.code }}" target="_blank" rel="noopener noreferrer">
-          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          Code
-        </a>
-        {% endif %}
-        {% if page.extra.project %}
-        <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ page.extra.project }}" target="_blank" rel="noopener noreferrer">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
-          Project Page
-        </a>
-        {% endif %}
-        {% if page.extra.video %}
-        <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ page.extra.video }}" target="_blank" rel="noopener noreferrer">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          Video
-        </a>
-        {% endif %}
-        {% if page.extra.slides %}
-        <a class="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900" href="{{ page.extra.slides }}" target="_blank" rel="noopener noreferrer">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0013.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-          Slides
-        </a>
-        {% endif %}
-      </div>
-    </header>
+  <article class="rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.22)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-38px_rgba(37,99,235,0.3)] dark:border-slate-700/80 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-35px_rgba(59,130,246,0.28)] dark:motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(59,130,246,0.35)] sm:p-8 motion-reduce:transition-none">
+    <p class="mb-2 text-sm sm:mb-3">
+      <a class="inline-flex cursor-pointer rounded-md font-semibold text-slate-700 transition-colors duration-150 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:text-slate-300 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/">返回首页</a>
+    </p>
 
-    {# 预览图/Teaser #}
-    {% if page.extra.image %}
-    <section class="mb-16">
-      <img src="{{ page.extra.image }}" alt="{{ page.title }}" class="w-full rounded-lg border border-slate-200" loading="lazy" />
-      {% if page.extra.image_caption %}
-      <p class="mt-4 text-center text-base text-slate-600">{{ page.extra.image_caption }}</p>
-      {% endif %}
-    </section>
-    {% endif %}
+    <h1 class="font-['Manrope','Noto_Sans_SC',sans-serif] text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">{{ page.title }}</h1>
+    {% if page.date %}<p class="mt-1.5 text-xs font-medium text-slate-500 sm:mt-2 sm:text-sm dark:text-slate-400">{{ page.date | date(format="%Y-%m-%d") }}</p>{% endif %}
 
-    {# 摘要 #}
-    {% if page.summary or page.extra.abstract %}
-    <section class="mb-16">
-      <h2 class="text-3xl font-bold text-slate-900 mb-6">Abstract</h2>
-      <div class="text-lg leading-relaxed text-slate-700 bg-slate-50 rounded-lg px-8 py-6 border border-slate-200">
-        {{ page.extra.abstract | default(value=page.summary) }}
-      </div>
-    </section>
-    {% endif %}
+    {% if page.extra.authors %}<p class="mt-4 text-sm text-slate-700 sm:mt-5 dark:text-slate-300"><strong class="font-semibold text-slate-900 dark:text-white">作者：</strong>{{ page.extra.authors }}</p>{% endif %}
+    {% if page.extra.venue %}<p class="text-sm text-slate-700 dark:text-slate-300"><strong class="font-semibold text-slate-900 dark:text-white">发表：</strong>{{ page.extra.venue }}</p>{% endif %}
 
-    {# 视频嵌入 #}
-    {% if page.extra.video_embed %}
-    <section class="mb-16">
-      <h2 class="text-3xl font-bold text-slate-900 mb-6">Video</h2>
-      <div class="aspect-video rounded-lg overflow-hidden border border-slate-200 bg-black">
-        {{ page.extra.video_embed | safe }}
-      </div>
-    </section>
-    {% endif %}
-
-    {# 主要内容 #}
-    <section class="max-w-none mb-16 text-lg leading-relaxed text-slate-700 [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:scroll-mt-24 [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:scroll-mt-24 [&_h3]:text-2xl [&_h3]:font-semibold [&_h3]:text-slate-900 [&_h4]:mt-6 [&_h4]:mb-2 [&_h4]:scroll-mt-24 [&_h4]:text-xl [&_h4]:font-semibold [&_h4]:text-slate-900 [&_p]:my-4 [&_ul]:my-4 [&_ol]:my-4 [&_ul]:pl-6 [&_ol]:pl-6 [&_li]:my-1.5 [&_a]:font-semibold [&_a]:text-cyan-700 [&_a:hover]:underline [&_blockquote]:my-6 [&_blockquote]:border-l-4 [&_blockquote]:border-cyan-300 [&_blockquote]:bg-white/60 [&_blockquote]:pl-4 [&_blockquote]:text-slate-600 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-slate-800 [&_pre]:my-6 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-slate-900 [&_pre]:px-6 [&_pre]:py-5 [&_pre]:text-sm [&_pre]:text-slate-100 [&_pre]:shadow-md [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-sm [&_pre_code]:text-slate-100 [&_table]:my-6 [&_table]:w-full [&_table]:text-sm [&_thead]:bg-slate-100 [&_th]:border [&_th]:border-slate-200 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_td]:border [&_td]:border-slate-200 [&_td]:px-3 [&_td]:py-2 [&_td]:text-left [&_img]:my-6 [&_img]:rounded-lg [&_img]:border [&_img]:border-slate-200" data-markdown-content>
+    <div class="mt-5 space-y-3 text-sm text-slate-700 sm:mt-7 sm:space-y-4 sm:text-base dark:text-slate-300 [&_h1]:mt-7 [&_h1]:font-['Manrope','Noto_Sans_SC',sans-serif] [&_h1]:text-2xl [&_h1]:font-extrabold [&_h1]:text-slate-900 sm:[&_h1]:mt-8 sm:[&_h1]:text-3xl dark:[&_h1]:text-white [&_h2]:mt-7 [&_h2]:font-['Manrope','Noto_Sans_SC',sans-serif] [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-slate-900 sm:[&_h2]:mt-8 sm:[&_h2]:text-2xl dark:[&_h2]:text-white [&_h3]:mt-5 [&_h3]:font-semibold [&_h3]:text-blue-700 dark:[&_h3]:text-blue-300 [&_p]:leading-7 sm:[&_p]:leading-8 [&_p]:text-slate-700 dark:[&_p]:text-slate-300 [&_a]:text-blue-700 [&_a]:no-underline dark:[&_a]:text-blue-300 [&_a:hover]:underline [&_code]:rounded [&_code]:bg-slate-200 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-slate-900 dark:[&_code]:bg-slate-800 dark:[&_code]:text-blue-200 [&_img]:max-w-full [&_img]:rounded-2xl [&_pre]:overflow-x-auto [&_pre]:rounded-2xl [&_pre]:border [&_pre]:border-slate-300 [&_pre]:bg-slate-200 [&_pre]:p-4 [&_pre]:text-slate-900 dark:[&_pre]:border-slate-700 dark:[&_pre]:bg-slate-950 dark:[&_pre]:text-slate-100 [&_strong]:text-slate-900 dark:[&_strong]:text-white">
       {{ page.content | safe }}
-    </section>
-
-    {# BibTeX引用 #}
-    {% if page.extra.bibtex %}
-    <section class="mb-16">
-      <h2 class="text-3xl font-bold text-slate-900 mb-6">Citation</h2>
-      <div class="relative">
-        <pre class="rounded-lg border border-slate-300 bg-slate-50 px-6 py-6 text-sm overflow-x-auto font-mono"><code>{{ page.extra.bibtex }}</code></pre>
-        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent)" class="absolute top-4 right-4 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:border-slate-400">
-          Copy
-        </button>
-      </div>
-    </section>
-    {% endif %}
-
-    {# 相关链接或致谢 #}
-    {% if page.extra.acknowledgement %}
-    <section class="mb-16">
-      <h2 class="text-3xl font-bold text-slate-900 mb-6">Acknowledgements</h2>
-      <div class="text-base leading-relaxed text-slate-600">
-        {{ page.extra.acknowledgement | safe }}
-      </div>
-    </section>
-    {% endif %}
-
-    {# 返回链接 #}
-    <div class="mt-20 pt-8 border-t border-slate-200">
-      <a href="/papers" class="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 font-medium transition">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-        Back to Publications
-      </a>
     </div>
   </article>
-  <script>
-    (() => {
-      const content = document.querySelector("[data-markdown-content]");
-      if (!content) return;
-      const headings = Array.from(content.querySelectorAll("h2"));
-      headings.forEach((heading) => {
-        const title = heading.textContent.trim().toLowerCase();
-        if (title !== "摘要" && title !== "abstract") return;
-        const next = heading.nextElementSibling;
-        if (next && next.classList.contains("abstract-block")) return;
 
-        const wrapper = document.createElement("div");
-        wrapper.className =
-          "abstract-block mt-4 mb-10 rounded-lg border border-slate-200 bg-slate-50 px-8 py-6 text-lg leading-relaxed text-slate-700";
-
-        let sibling = heading.nextSibling;
-        while (sibling) {
-          const current = sibling;
-          sibling = sibling.nextSibling;
-          if (
-            current.nodeType === Node.ELEMENT_NODE &&
-            current.tagName.toLowerCase() === "h2"
-          ) {
-            break;
-          }
-          if (current.nodeType === Node.TEXT_NODE && !current.textContent.trim()) {
-            continue;
-          }
-          wrapper.appendChild(current);
-        }
-
-        heading.after(wrapper);
-      });
-    })();
-  </script>
+  <section class="mt-6 rounded-2xl border border-slate-300/70 bg-white/65 p-4 backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_20px_48px_-36px_rgba(30,64,175,0.3)] dark:border-slate-700/70 dark:bg-slate-900/55 dark:motion-safe:hover:shadow-[0_20px_48px_-36px_rgba(59,130,246,0.28)] sm:mt-8 sm:p-5 motion-reduce:transition-none">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">还想继续看？</p>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">可返回论文列表或博客，查看更多研究结果与过程记录。</p>
+      </div>
+      <div class="flex flex-col gap-2 sm:flex-row">
+        <a class="inline-flex items-center justify-center rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:bg-blue-300 dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/papers/">查看论文</a>
+        <a class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors duration-150 hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-600 dark:text-slate-200 dark:hover:border-blue-300 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/blog/">阅读日志</a>
+      </div>
+    </div>
+  </section>
 {% endblock content %}

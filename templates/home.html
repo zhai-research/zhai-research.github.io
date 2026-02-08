@@ -1,187 +1,127 @@
 {% extends "base.html" %}
-{% import "macros.html" as macros %}
-
 {% block content %}
-  {% set entity = page | default(value=section) %}
-  {% set lang_code = entity.lang | default(value=config.default_language) %}
-  {% set profile = entity.extra %}
-  
-  {% if lang_code == "en" %}
-    {% set hero_eyebrow = "PhD student profile" %}
-    {% set hero_email = "Email" %}
-    {% set hero_snapshot = "Research notes" %}
-    {% set hero_focus = "Research interests" %}
-    {% set hero_secondary = "View papers" %}
-    {% set bio_title = "Research Bio" %}
-    {% set papers_title = "Featured papers" %}
-    {% set diary_title = "Recent notes" %}
-    {% set view_all_papers = "All papers" %}
-    {% set view_all_diary = "All diary entries" %}
-  {% else %}
-    {% set hero_eyebrow = "博士生学术主页" %}
-    {% set hero_email = "邮件联系" %}
-    {% set hero_snapshot = "研究笔记" %}
-    {% set hero_focus = "研究兴趣" %}
-    {% set hero_secondary = "查看论文" %}
-    {% set bio_title = "研究简介" %}
-    {% set papers_title = "精选论文" %}
-    {% set diary_title = "最新博客" %}
-    {% set view_all_papers = "全部论文" %}
-    {% set view_all_diary = "全部博客" %}
-  {% endif %}
+  {% set profile = section.extra %}
 
-  {# 获取论文和博客页面 #}
+  <section class="grid items-start gap-7 sm:gap-8 lg:gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+    <div>
+      <p class="inline-flex rounded-full border border-blue-300/50 bg-blue-100/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-blue-800 dark:border-blue-300/25 dark:bg-blue-300/10 dark:text-blue-200">Marine AI Research</p>
+      <h1 class="mt-4 font-['Manrope','Noto_Sans_SC',sans-serif] text-3xl font-extrabold leading-tight text-slate-900 sm:mt-5 sm:text-4xl md:text-6xl dark:text-white">
+        {{ profile.name | default(value=section.title) }}
+      </h1>
+      <p class="mt-3 text-base font-semibold text-blue-700 sm:mt-4 sm:text-lg dark:text-blue-300">
+        {% if profile.role %}{{ profile.role }}{% else %}Researcher{% endif %}{% if profile.affiliation %} · {{ profile.affiliation }}{% endif %}
+      </p>
+      <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-700 sm:mt-5 sm:text-base sm:leading-8 dark:text-slate-300" id="hero-about">
+        {% if profile.research_bio %}{{ profile.research_bio | safe }}{% else %}聚焦海洋环境要素预测、稀疏重构与可解释智能方法，持续探索数据驱动模型在真实复杂场景中的可靠性。{% endif %}
+      </p>
+
+      <div class="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-3">
+        {% if profile.email %}
+          <a class="inline-flex w-full cursor-pointer items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white transition-colors duration-200 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-[0_12px_28px_-16px_rgba(30,64,175,0.55)] hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:bg-blue-300 dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-blue-300/60 sm:w-auto motion-reduce:transform-none motion-reduce:transition-none motion-reduce:shadow-none" href="mailto:{{ profile.email }}">
+            联系我
+          </a>
+        {% endif %}
+        <a class="inline-flex w-full cursor-pointer items-center justify-center rounded-xl border border-slate-300 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-800 transition-colors duration-200 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-[0_12px_24px_-16px_rgba(30,41,59,0.45)] hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-600 dark:bg-transparent dark:text-slate-100 dark:hover:border-blue-300 dark:hover:text-blue-200 dark:focus-visible:ring-blue-300/60 sm:w-auto motion-reduce:transform-none motion-reduce:transition-none motion-reduce:shadow-none" href="/papers/">
+          查看研究成果
+        </a>
+      </div>
+    </div>
+
+    <aside class="rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.22)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(37,99,235,0.28)] dark:border-slate-700/70 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-30px_rgba(59,130,246,0.28)] dark:motion-safe:hover:shadow-[0_24px_70px_-35px_rgba(59,130,246,0.35)] sm:p-6 motion-reduce:transition-none">
+      <h2 class="text-sm font-bold uppercase tracking-[0.14em] text-blue-700 dark:text-blue-300">Research Focus</h2>
+      <ul class="mt-3 space-y-2.5 text-sm leading-6 text-slate-700 sm:mt-4 sm:space-y-3 sm:leading-7 dark:text-slate-300">
+        {% if profile.research_highlights %}
+          {% for item in profile.research_highlights %}
+            <li class="rounded-xl border border-slate-200/80 bg-white/70 px-4 py-3 dark:border-slate-700/70 dark:bg-slate-800/60">{{ item }}</li>
+          {% endfor %}
+        {% else %}
+          <li class="rounded-xl border border-slate-200/80 bg-white/70 px-4 py-3 dark:border-slate-700/70 dark:bg-slate-800/60">海洋环境要素的数据驱动建模</li>
+        {% endif %}
+      </ul>
+
+      <h2 class="mt-6 text-sm font-bold uppercase tracking-[0.14em] text-blue-700 sm:mt-7 dark:text-blue-300">Links</h2>
+      <ul class="mt-3 grid gap-2">
+        {% for link in profile.links %}
+          <li>
+            <a class="inline-flex w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200/80 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors duration-150 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-700/70 dark:bg-slate-800/50 dark:text-slate-200 dark:hover:border-blue-300/60 dark:hover:text-blue-200 dark:focus-visible:ring-blue-300/60 motion-reduce:transform-none motion-reduce:transition-none" href="{{ link.url }}" target="_blank" rel="noreferrer">
+              {{ link.label }}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+  </section>
+
   {% set papers_section = get_section(path="papers/_index.md") %}
   {% set blog_section = get_section(path="blog/_index.md") %}
+  <section class="mt-7 grid gap-4 sm:mt-9 sm:gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+    <article class="rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.2)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(37,99,235,0.26)] dark:border-slate-700/70 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-30px_rgba(59,130,246,0.24)] dark:motion-safe:hover:shadow-[0_24px_70px_-35px_rgba(59,130,246,0.32)] sm:p-6 motion-reduce:transition-none">
+      <div class="flex items-center justify-between">
+        <h2 class="font-['Manrope','Noto_Sans_SC',sans-serif] text-lg font-extrabold text-slate-900 sm:text-xl dark:text-white">Recent Outputs</h2>
+        <a class="rounded-md px-2 py-1 text-xs font-semibold text-slate-600 transition-colors duration-150 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:text-slate-400 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/papers/">查看全部</a>
+      </div>
 
-  <section id="home" class="hero grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_1.4fr]">
-    <div class="relative overflow-hidden rounded-3xl border border-white/30 bg-gradient-to-br from-white/50 via-white/20 to-white/10 px-7 py-8 shadow-[0_18px_50px_-30px_rgba(56,189,248,0.3),0_10px_24px_-16px_rgba(15,23,42,0.25)] backdrop-blur-[28px]">
-      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div class="absolute inset-0 rounded-3xl bg-gradient-to-b from-white/70 via-white/20 to-transparent opacity-80"></div>
-        <div class="absolute left-10 top-6 h-24 w-24 rounded-full bg-sky-200/40 blur-2xl"></div>
-        <div class="absolute right-12 top-8 h-24 w-24 rounded-full bg-cyan-200/35 blur-2xl"></div>
-        <div class="absolute inset-x-6 top-2 h-6 rounded-full bg-white/70 blur-md"></div>
-      </div>
-      <div class="relative flex flex-col gap-6">
-        <div class="flex flex-wrap items-start gap-4">
-          {% if profile.avatar %}
-          <img class="h-20 w-20 rounded-2xl object-cover ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" src="{{ profile.avatar }}" alt="{{ profile.name }}" loading="lazy" />
-          {% else %}
-          <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 text-lg font-black uppercase text-white ring-4 ring-cyan-200/50 shadow-md shadow-blue-400/10" aria-label="Avatar">AI</div>
-          {% endif %}
-          <div class="min-w-[12rem] flex-1">
-            <p class="text-xs font-semibold uppercase tracking-[0.34em] text-cyan-700/80">{{ hero_eyebrow }}</p>
-            <h1 class="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">{{ profile.name }}</h1>
-            {% if profile.role %}
-            <p class="mt-1 text-lg font-semibold text-slate-900">{{ profile.role }}</p>
-            {% endif %}
-          </div>
-        </div>
-        {% if profile.affiliation or profile.location %}
-        <dl class="flex flex-wrap gap-3 sm:flex-nowrap">
-          {% if profile.affiliation %}
-          <div class="w-fit rounded-2xl border border-white/30 bg-white/20 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl">
-            <dt class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Affiliation</dt>
-            <dd class="mt-1 text-sm font-semibold text-slate-800">{{ profile.affiliation }}</dd>
-          </div>
-          {% endif %}
-          {% if profile.location %}
-          <div class="w-fit rounded-2xl border border-white/30 bg-white/20 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl">
-            <dt class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Location</dt>
-            <dd class="mt-1 text-sm font-semibold text-slate-800">{{ profile.location }}</dd>
-          </div>
-          {% endif %}
-        </dl>
-        {% endif %}
-        <div class="flex flex-wrap items-center gap-3">
-          {% if profile.email %}
-          {{ macros::button(text=hero_email, href="mailto:" ~ profile.email, variant="primary") }}
-          {% endif %}
-          {{ macros::button(text=hero_secondary, href="#papers", variant="secondary") }}
-        </div>
-        {% if profile.links %}
-        <div class="flex flex-wrap items-center gap-2">
-          {% for link in profile.links %}
-          <a class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 backdrop-blur-3xl transition hover:border-cyan-400/40 hover:text-cyan-700 hover:bg-white/25" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
-          {% endfor %}
-        </div>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="relative overflow-hidden rounded-3xl border border-white/30 bg-gradient-to-br from-white/50 via-white/20 to-white/10 px-7 py-8 shadow-[0_18px_50px_-30px_rgba(56,189,248,0.3),0_10px_24px_-16px_rgba(15,23,42,0.25)] backdrop-blur-[28px]">
-      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div class="absolute inset-0 rounded-3xl bg-gradient-to-b from-white/70 via-white/20 to-transparent opacity-80"></div>
-        <div class="absolute left-10 top-6 h-24 w-24 rounded-full bg-sky-200/40 blur-2xl"></div>
-        <div class="absolute right-12 top-8 h-24 w-24 rounded-full bg-cyan-200/35 blur-2xl"></div>
-        <div class="absolute inset-x-6 top-2 h-6 rounded-full bg-white/70 blur-md"></div>
-      </div>
-      <div class="relative flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="h-6 w-1 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full"></div>
-          <h3 class="text-lg font-bold text-slate-900">{{ bio_title }}</h3>
-        </div>
-      </div>
-      {% if profile.research_bio %}
-      <div class="relative mt-4 prose prose-sm prose-slate max-w-none">
-        {{ profile.research_bio | safe }}
-      </div>
-      {% else %}
-      <p class="relative mt-4 text-sm leading-relaxed text-slate-700">
-        {{ lang_code == "en" and "I am a PhD student focusing on multimodal AI and data-efficient learning. My research explores robust representations for vision-language alignment, with applications in video understanding and cross-modal retrieval." or "我是一名博士研究生，研究方向为多模态人工智能与数据高效学习。我的研究探索视觉-语言对齐的鲁棒表征方法，并应用于视频理解和跨模态检索等领域。" }}
-      </p>
-      {% endif %}
-      {% if profile.research_highlights %}
-      <div class="relative mt-6 space-y-2">
-        <p class="text-sm font-semibold text-slate-700">{{ hero_focus }}</p>
-        <div class="flex flex-wrap gap-2">
-          {% for item in profile.research_highlights %}
-            {% set loop_index = loop.index0 %}
-            {% if loop_index % 6 == 0 %}
-              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1.5 text-xs font-semibold text-cyan-700 backdrop-blur-xl">{{ item }}</span>
-            {% elif loop_index % 6 == 1 %}
-              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-purple-200/30 to-pink-200/30 border border-purple-300/35 px-3 py-1.5 text-xs font-semibold text-purple-700 backdrop-blur-xl">{{ item }}</span>
-            {% elif loop_index % 6 == 2 %}
-              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-emerald-200/30 to-teal-200/30 border border-emerald-300/35 px-3 py-1.5 text-xs font-semibold text-emerald-700 backdrop-blur-xl">{{ item }}</span>
-            {% elif loop_index % 6 == 3 %}
-              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-amber-200/30 to-orange-200/30 border border-amber-300/35 px-3 py-1.5 text-xs font-semibold text-amber-700 backdrop-blur-xl">{{ item }}</span>
-            {% elif loop_index % 6 == 4 %}
-              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-rose-200/30 to-red-200/30 border border-rose-300/35 px-3 py-1.5 text-xs font-semibold text-rose-700 backdrop-blur-xl">{{ item }}</span>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        <div class="rounded-2xl border border-slate-200/80 bg-white/70 p-3.5 dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Papers</p>
+          <ul class="mt-2 space-y-2">
+            {% if papers_section.pages and papers_section.pages | length > 0 %}
+              {% for paper in papers_section.pages | sort(attribute="date") | reverse %}
+                {% if loop.index <= 2 %}
+                  <li>
+                    <a class="block rounded-lg px-2 py-1.5 text-sm text-slate-700 transition-colors duration-150 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="{{ paper.permalink }}">{{ paper.title }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
             {% else %}
-              <span class="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-200/30 to-blue-200/30 border border-indigo-300/35 px-3 py-1.5 text-xs font-semibold text-indigo-700 backdrop-blur-xl">{{ item }}</span>
+              <li class="px-2 py-1.5 text-sm text-slate-500 dark:text-slate-400">暂无论文条目</li>
             {% endif %}
-          {% endfor %}
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200/80 bg-white/70 p-3.5 dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Logs</p>
+          <ul class="mt-2 space-y-2">
+            {% if blog_section.pages and blog_section.pages | length > 0 %}
+              {% for post in blog_section.pages | sort(attribute="date") | reverse %}
+                {% if loop.index <= 2 %}
+                  <li>
+                    <a class="block rounded-lg px-2 py-1.5 text-sm text-slate-700 transition-colors duration-150 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="{{ post.permalink }}">{{ post.title }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <li class="px-2 py-1.5 text-sm text-slate-500 dark:text-slate-400">暂无日志条目</li>
+            {% endif %}
+          </ul>
         </div>
       </div>
-      {% endif %}
-    </div>
-  </section>
+    </article>
 
-  <section id="papers" class="mt-6 rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-7 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
-    {{ macros::section_header(eyebrow=papers_title, title=nav_papers, link_text=view_all_papers, link_href="/papers") }}
-    <ul class="mt-4 space-y-3" role="list">
-      {% if papers_section.pages | length > 0 %}
-        {% for paper in papers_section.pages | sort(attribute="date") | reverse | slice(end=3) %}
-        <li>
-          <a class="flex flex-col gap-1 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl transition hover:bg-white/25 hover:border-cyan-300/40" href="{{ paper.permalink }}">
-            <div class="flex items-center justify-between gap-2 flex-wrap">
-              <span class="text-sm font-semibold text-slate-900">{{ paper.title }}</span>
-              {% if paper.extra.venue %}
-              <span class="rounded-full bg-gradient-to-r from-cyan-200/30 to-blue-200/30 border border-cyan-300/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-700 backdrop-blur-xl">{{ paper.extra.venue }}</span>
-              {% endif %}
-            </div>
-            {% if paper.summary %}
-            <p class="text-sm text-slate-600">{{ paper.summary }}</p>
-            {% endif %}
-          </a>
+    <article class="rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.2)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(37,99,235,0.26)] dark:border-slate-700/70 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-30px_rgba(59,130,246,0.24)] dark:motion-safe:hover:shadow-[0_24px_70px_-35px_rgba(59,130,246,0.32)] sm:p-6 motion-reduce:transition-none">
+      <h2 class="font-['Manrope','Noto_Sans_SC',sans-serif] text-lg font-extrabold text-slate-900 sm:text-xl dark:text-white">Research Timeline</h2>
+      <ol class="mt-4 space-y-3">
+        <li class="rounded-xl border border-slate-200/80 bg-white/70 px-3.5 py-3 dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Current</p>
+          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">深度时序建模与稀疏重构方法并行推进，关注真实海况泛化能力。</p>
         </li>
-        {% endfor %}
-      {% else %}
-        <li class="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-600">{{ lang_code == "en" and "No papers published yet." or "暂无论文发布。" }}</li>
-      {% endif %}
-    </ul>
-  </section>
+        <li class="rounded-xl border border-slate-200/80 bg-white/70 px-3.5 py-3 dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Practice</p>
+          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">面向海上观测与工程场景做模型验证，持续迭代数据清洗与误差分析流程。</p>
+        </li>
+        <li class="rounded-xl border border-slate-200/80 bg-white/70 px-3.5 py-3 dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Next</p>
+          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">强化可解释性与不确定性评估，提升复杂边界条件下的决策支持价值。</p>
+        </li>
+      </ol>
 
-  <section id="diary" class="mt-6 rounded-3xl border border-white/25 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-7 py-7 shadow-sm shadow-blue-400/15 backdrop-blur-3xl">
-    {{ macros::section_header(eyebrow=diary_title, title=nav_diary, link_text=view_all_diary, link_href="/blog") }}
-    <ul class="mt-4 space-y-3" role="list">
-      {% if blog_section.pages | length > 0 %}
-        {% for post in blog_section.pages | sort(attribute="date") | reverse | slice(end=3) %}
-        <li class="flex items-center justify-between gap-3 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 shadow-sm shadow-blue-400/10 backdrop-blur-3xl transition hover:bg-white/25">
-          <div class="min-w-0 flex-1">
-            <p class="text-sm font-semibold text-slate-900">
-              <a href="{{ post.permalink }}" class="hover:text-cyan-700">{{ post.title }}</a>
-            </p>
-            {% if post.summary %}<p class="mt-0.5 text-sm text-slate-600">{{ post.summary }}</p>{% endif %}
-          </div>
-          {% if post.date %}
-          <time class="flex-shrink-0 whitespace-nowrap text-xs font-semibold text-slate-500" datetime="{{ post.date }}">{{ post.date | date(format="%m-%d") }}</time>
-          {% endif %}
-        </li>
-        {% endfor %}
-      {% else %}
-        <li class="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-600">{{ lang_code == "en" and "No blog posts yet." or "暂无博客文章。" }}</li>
-      {% endif %}
-    </ul>
+      <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        {% if profile.email %}
+          <a class="inline-flex items-center justify-center rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:bg-blue-300 dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="mailto:{{ profile.email }}">合作交流</a>
+        {% endif %}
+        <a class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors duration-150 hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-600 dark:text-slate-200 dark:hover:border-blue-300 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/blog/">研究日志</a>
+      </div>
+    </article>
   </section>
 {% endblock content %}

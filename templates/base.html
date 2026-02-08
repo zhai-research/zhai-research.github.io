@@ -1,322 +1,66 @@
-<!DOCTYPE html>
-{% if page %} {% set entity = page %} {% elif section %} {% set entity = section
-%} {% elif taxonomy %} {% set entity = taxonomy %} {% elif term %} {% set entity
-= term %} {% endif %} {% set lang_code = config.default_language |
-default(value="zh") %} {% if entity and entity.lang %} {% set lang_code =
-entity.lang %} {% endif %} {% if lang_code == "en" %} {% set nav_home = "Home"
-%} {% set nav_papers = "Research" %} {% set nav_diary = "Blog" %} {% set
-nav_about = "About" %} {% set nav_profile = "Academic Profile" %} {% else %} {%
-set nav_home = "首页" %} {% set nav_papers = "研究" %} {% set nav_diary = "博客"
-%} {% set nav_about = "关于我" %} {% set nav_profile = "学术主页" %} {% endif %}
-{% set home_section = get_section(path="_index.md") %} {% set profile =
-home_section.extra %} {% set site_title_fallback = profile.name |
-default(value=nav_profile) %}
-{% set site_title = config.title | default(value=site_title_fallback) %} {% set
-page_title = site_title %} {% if entity and entity.title %} {% set page_title =
-entity.title ~ " · " ~ site_title %} {% endif %} {% set meta_description = "" %}
-{% if entity and entity.description %} {% set meta_description =
-entity.description %} {% elif config.description %} {% set meta_description =
-config.description %} {% elif profile.role %} {% set meta_description =
-profile.role %} {% elif profile.affiliation %} {% set meta_description =
-profile.affiliation %} {% endif %} {% set canonical_url = "" %} {% if
-entity and entity.permalink %} {% set canonical_url = entity.permalink %} {%
-endif %} {% set current_path = current_path | default(value="/") %} {% set
-is_home = current_path == "/" %} {% set is_papers = current_path is
-starting_with("/papers") %} {% set is_blog = current_path is
-starting_with("/blog") %} {% set about_href = "/#about" %} {% if is_home %} {%
-set about_href = "#about" %} {% endif %} {% set nav_base = "rounded-full px-3
-py-2 transition duration-300 focus-visible:outline-none focus-visible:ring-2
-focus-visible:ring-cyan-400/60" %} {% set nav_active = "bg-white/30
-text-cyan-700 shadow-sm shadow-cyan-500/20" %} {% set nav_inactive =
-"hover:bg-white/25 hover:text-cyan-700" %}
-<html lang="{{ lang_code }}">
+<!doctype html>
+<html lang="{{ config.default_language | default(value='zh') }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ page_title }}</title>
-    {% if meta_description != "" %}
-    <meta name="description" content="{{ meta_description }}" />
-    {% endif %} {% if profile.name %}
-    <meta name="author" content="{{ profile.name }}" />
-    {% endif %} {% if canonical_url != "" %}
-    <link rel="canonical" href="{{ canonical_url }}" />
-    {% endif %}
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#e6f4ff" />
-    <meta property="og:site_name" content="{{ site_title }}" />
-    <meta
-      property="og:title"
-      content="{% if entity and entity.title %}{{ entity.title }}{% else %}{{ site_title }}{% endif %}"
+    <title>
+      {% if page and page.title %}{{ page.title }} · {% elif section and section.title %}{{ section.title }} · {% endif %}{{ config.title | default(value='个人主页') }}
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
     />
-    {% if meta_description != "" %}
-    <meta property="og:description" content="{{ meta_description }}" />
-    {% endif %} {% if canonical_url != "" %}
-    <meta property="og:url" content="{{ canonical_url }}" />
-    {% endif %}
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="{{ lang_code }}" />
-    <meta name="twitter:card" content="summary" />
-    {% if config.generate_feed %} <link rel="alternate"
-    type="application/rss+xml" title="{{ site_title }}" href="{{
-    get_url(path="rss.xml") }}" /> {% endif %}
-    <link rel="preload" as="style" href="{{ get_url(path='tailwind.css') }}" />
     <link rel="stylesheet" href="{{ get_url(path='tailwind.css') }}" />
-    <script>
-      if (!window.location.hash && "scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-        window.scrollTo(0, 0);
-      }
-    </script>
   </head>
-  <body class="min-h-screen bg-slate-50 text-slate-900">
-    <div class="pointer-events-none fixed inset-0 -z-10">
-      <div
-        class="absolute -top-24 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-cyan-200/60 blur-3xl"
-      ></div>
-      <div
-        class="absolute top-36 -left-10 h-64 w-64 rounded-full bg-orange-200/40 blur-3xl"
-      ></div>
-      <div
-        class="absolute -bottom-24 right-10 h-72 w-72 rounded-full bg-emerald-200/50 blur-3xl"
-      ></div>
-    </div>
-    <a
-      class="sr-only focus:not-sr-only focus:rounded-full focus:bg-white/80 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900 focus:shadow-lg"
-      href="#main-content"
-      >Skip to content</a
-    >
-    <div class="mx-auto max-w-6xl px-4 pb-12 pt-0 sm:px-6">
-      <header class="sticky top-0 z-20 w-full px-2 py-2">
-        <div
-          class="header-shell relative flex w-full flex-nowrap items-center justify-between gap-3 overflow-visible rounded-3xl bg-white/25 px-3 py-3 shadow-[0_20px_60px_-28px_rgba(56,189,248,0.4),0_12px_28px_-18px_rgba(15,23,42,0.3)] ring-1 ring-white/50 backdrop-blur-3xl backdrop-saturate-150 will-change-transform sm:overflow-hidden sm:px-4 sm:py-3.5"
-        >
-         <span class="header-quote header-fade origin-left min-w-0 flex-1 truncate whitespace-nowrap
-text-base font-bold tracking-wide text-transparent bg-clip-text
-bg-gradient-to-r from-rose-400 via-orange-400 to-amber-400
-drop-shadow-[0_1px_2px_rgba(251,113,133,0.35)]
-will-change-transform sm:text-lg">
-  永远相信美好的事情即将发生
-</span>
-          <details class="mobile-menu relative flex-shrink-0 sm:hidden">
-            <summary
-              class="header-menu header-fade list-none cursor-pointer rounded-full bg-white/25 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 ring-1 ring-white/40 backdrop-blur-2xl hover:bg-white/30 hover:text-cyan-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60"
-            >
-              菜单
-            </summary>
-            <nav
-              class="absolute right-0 top-full z-30 mt-2 flex w-44 flex-col gap-1 rounded-2xl bg-white/80 p-2 text-sm font-semibold text-slate-800 shadow-[0_20px_40px_-24px_rgba(15,23,42,0.45)] ring-1 ring-white/50 backdrop-blur-2xl backdrop-saturate-150"
-              aria-label="Primary"
-            >
-              <button
-                class="menu-close w-full rounded-xl bg-white/70 px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600 transition duration-300 hover:text-cyan-700"
-                type="button"
-              >
-                收起
-              </button>
-              <a
-                class="{{ nav_base }} {% if is_home %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}"
-                href="/"
-                {%
-                if
-                is_home
-                %}aria-current="page"
-                {%
-                endif
-                %}
-                >{{ nav_home }}</a
-              >
-              <a
-                class="{{ nav_base }} {% if is_papers %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}"
-                href="/papers"
-                {%
-                if
-                is_papers
-                %}aria-current="page"
-                {%
-                endif
-                %}
-                >{{ nav_papers }}</a
-              >
-              <a
-                class="{{ nav_base }} {% if is_blog %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}"
-                href="/blog"
-                {%
-                if
-                is_blog
-                %}aria-current="page"
-                {%
-                endif
-                %}
-                >{{ nav_diary }}</a
-              >
-              <a
-                class="{{ nav_base }} {{ nav_inactive }}"
-                href="{{ about_href }}"
-                >{{ nav_about }}</a
-              >
-            </nav>
-          </details>
-          <nav
-            class="header-nav header-fade origin-right hidden flex-shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-white/20 px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-sm shadow-blue-400/15 ring-1 ring-white/40 backdrop-blur-2xl backdrop-saturate-150 will-change-transform sm:flex"
-            aria-label="Primary"
-          >
-            <a
-              class="{{ nav_base }} {% if is_home %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}"
-              href="/"
-              {%
-              if
-              is_home
-              %}aria-current="page"
-              {%
-              endif
-              %}
-              >{{ nav_home }}</a
-            >
-            <a
-              class="{{ nav_base }} {% if is_papers %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}"
-              href="/papers"
-              {%
-              if
-              is_papers
-              %}aria-current="page"
-              {%
-              endif
-              %}
-              >{{ nav_papers }}</a
-            >
-            <a
-              class="{{ nav_base }} {% if is_blog %}{{ nav_active }}{% else %}{{ nav_inactive }}{% endif %}"
-              href="/blog"
-              {%
-              if
-              is_blog
-              %}aria-current="page"
-              {%
-              endif
-              %}
-              >{{ nav_diary }}</a
-            >
-            <a class="{{ nav_base }} {{ nav_inactive }}" href="{{ about_href }}"
-              >{{ nav_about }}</a
-            >
+  <body class="min-h-screen bg-slate-100 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+    <div class="relative isolate min-h-screen overflow-hidden">
+      <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,#2563eb2e,transparent_42%),radial-gradient(circle_at_10%_18%,#1e3a8a24,transparent_35%),linear-gradient(180deg,#f8fbff_0%,#ecfeff_50%,#e2e8f0_100%)] dark:bg-[radial-gradient(circle_at_top_right,#60a5fa1f,transparent_45%),radial-gradient(circle_at_15%_20%,#1d4ed826,transparent_38%),linear-gradient(180deg,#020617_0%,#0f172a_48%,#020617_100%)]"></div>
+      <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 bg-[linear-gradient(to_bottom,rgba(37,99,235,0.18),transparent)] dark:bg-[linear-gradient(to_bottom,rgba(59,130,246,0.14),transparent)]"></div>
+
+      <header class="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4 lg:px-8">
+        <div class="mx-auto flex w-full max-w-6xl items-center justify-between rounded-2xl border border-slate-300/70 bg-white/80 px-3 py-2.5 text-slate-700 backdrop-blur-xl dark:border-slate-700/60 dark:bg-slate-900/70 dark:text-slate-200 sm:px-4 sm:py-3">
+          <a class="inline-flex items-center gap-2.5 rounded-lg text-sm font-bold transition-colors duration-200 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 sm:gap-3 sm:text-base motion-reduce:transition-none" href="/">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 text-sm text-slate-950">YZ</span>
+            <span class="font-['Manrope','Noto_Sans_SC',sans-serif]">Zhai Research</span>
+          </a>
+          <nav class="hidden items-center gap-6 text-sm font-semibold md:flex">
+            <a class="rounded-md transition-colors duration-200 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/">首页</a>
+            <a class="rounded-md transition-colors duration-200 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/papers/">研究</a>
+            <a class="rounded-md transition-colors duration-200 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/blog/">博客</a>
           </nav>
         </div>
+        <nav class="mx-auto mt-2 grid w-full max-w-6xl grid-cols-3 gap-2 rounded-xl border border-slate-300/70 bg-white/70 p-1 text-xs font-semibold text-slate-700 backdrop-blur dark:border-slate-700/60 dark:bg-slate-900/60 dark:text-slate-200 md:hidden">
+          <a class="rounded-lg px-2 py-2 text-center transition-colors duration-150 hover:bg-blue-100 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:bg-slate-800 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/">首页</a>
+          <a class="rounded-lg px-2 py-2 text-center transition-colors duration-150 hover:bg-blue-100 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:bg-slate-800 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/papers/">研究</a>
+          <a class="rounded-lg px-2 py-2 text-center transition-colors duration-150 hover:bg-blue-100 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:bg-slate-800 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/blog/">博客</a>
+        </nav>
       </header>
 
-      <main id="main-content" class="pt-4" tabindex="-1">
+      <main class="mx-auto w-full max-w-6xl px-3 pb-14 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-12">
         {% block content %}{% endblock %}
       </main>
 
-      <footer
-        class="mt-9 flex flex-col items-start justify-between gap-2 text-sm text-slate-600 sm:flex-row sm:items-center"
-      >
-        <span>© {{ now() | date(format="%Y") }} {{ profile.name }}</span>
-        {% if profile.email %}
-        <a
-          class="font-semibold text-teal-700 hover:underline"
-          href="mailto:{{ profile.email }}"
-          >{{ profile.email }}</a
-        >
-        {% endif %}
+      {% set home_section = get_section(path="_index.md") %}
+      {% set profile = home_section.extra %}
+      <footer class="mx-auto mt-4 w-full max-w-6xl px-3 pb-8 sm:mt-6 sm:px-6 sm:pb-10 lg:px-8">
+        <div class="rounded-2xl border border-slate-300/70 bg-white/65 p-4 text-slate-700 backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_20px_48px_-36px_rgba(30,64,175,0.3)] dark:border-slate-700/70 dark:bg-slate-900/55 dark:text-slate-300 dark:motion-safe:hover:shadow-[0_20px_48px_-36px_rgba(59,130,246,0.28)] sm:p-5 motion-reduce:transition-none">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm">
+              <span class="font-semibold text-slate-900 dark:text-slate-100">© {{ now() | date(format="%Y") }} {{ profile.name | default(value='Zhai Research') }}</span>
+              <span class="ml-0 block text-slate-500 sm:ml-2 sm:inline dark:text-slate-400">Academic Research Notes</span>
+            </p>
+            <div class="flex flex-wrap items-center gap-2.5 text-sm font-medium">
+              {% if profile.email %}
+                <a class="rounded-md px-2 py-1 transition-colors duration-150 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+              {% endif %}
+              <a class="rounded-md px-2 py-1 transition-colors duration-150 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/papers/">Papers</a>
+              <a class="rounded-md px-2 py-1 transition-colors duration-150 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/blog/">Blog</a>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
-    <script>
-      (() => {
-        const shell = document.querySelector(".header-shell");
-        if (!shell) return;
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-          return;
-        const fadeTargets = shell.querySelectorAll(".header-fade");
-
-        let rafId = null;
-        const current = {
-          shellScale: 1,
-          shellOffset: 16,
-          fade: 1,
-        };
-
-        const lerp = (from, to, t) => from + (to - from) * t;
-        const isClose = (a, b) => Math.abs(a - b) < 0.001;
-        const computeTarget = () => {
-          const scrollY = window.scrollY || 0;
-          const scrollProgress = Math.min(1, Math.max(0, scrollY / 220));
-          const eased = 1 - Math.pow(1 - scrollProgress, 2);
-          const stickyProgress = Math.min(1, scrollY / 16);
-          const stickyEase = 1 - Math.pow(1 - stickyProgress, 2);
-          const shellScale = 1 - eased * 0.42;
-          const shellOffset = (1 - stickyEase) * 16;
-          const fade = Math.max(0, 1 - eased);
-
-          return { shellScale, shellOffset, fade };
-        };
-
-        shell.style.transformOrigin = "center top";
-
-        const apply = () => {
-          rafId = null;
-          const target = computeTarget();
-
-          const smoothing = 0.15;
-          current.shellScale = lerp(
-            current.shellScale,
-            target.shellScale,
-            smoothing
-          );
-          current.shellOffset = lerp(
-            current.shellOffset,
-            target.shellOffset,
-            smoothing
-          );
-          current.fade = lerp(current.fade, target.fade, smoothing);
-          shell.style.transform = `translateZ(0) translateY(${current.shellOffset.toFixed(
-            2
-          )}px) scale(${current.shellScale.toFixed(3)})`;
-          fadeTargets.forEach((target) => {
-            target.style.opacity = current.fade.toFixed(3);
-          });
-
-          const settled =
-            isClose(current.shellScale, target.shellScale) &&
-            isClose(current.shellOffset, target.shellOffset) &&
-            isClose(current.fade, target.fade);
-
-          if (!settled) schedule();
-        };
-
-        const schedule = () => {
-          if (rafId) return;
-          rafId = requestAnimationFrame(apply);
-        };
-
-        const initialTarget = computeTarget();
-        current.shellScale = initialTarget.shellScale;
-        current.shellOffset = initialTarget.shellOffset;
-        current.fade = initialTarget.fade;
-        apply();
-        window.addEventListener("scroll", schedule, { passive: true });
-        window.addEventListener("resize", schedule, { passive: true });
-        window.addEventListener("load", schedule, { once: true });
-      })();
-    </script>
-    <script>
-      (() => {
-        const menu = document.querySelector(".mobile-menu");
-        if (!menu) return;
-        const closeBtn = menu.querySelector(".menu-close");
-        const links = menu.querySelectorAll("a");
-        const closeMenu = () => {
-          menu.removeAttribute("open");
-          const summary = menu.querySelector("summary");
-          if (summary) summary.focus();
-        };
-
-        if (closeBtn) {
-          closeBtn.addEventListener("click", closeMenu);
-        }
-        links.forEach((link) => {
-          link.addEventListener("click", closeMenu);
-        });
-      })();
-    </script>
   </body>
 </html>
