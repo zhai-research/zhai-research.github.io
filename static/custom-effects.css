@@ -1,0 +1,307 @@
+.fx-enter {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fx-enter 520ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.fx-enter-soft {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: fx-enter 700ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.fx-delay-1 {
+  animation-delay: 80ms;
+}
+
+.fx-delay-2 {
+  animation-delay: 160ms;
+}
+
+.fx-delay-3 {
+  animation-delay: 240ms;
+}
+
+.fx-float {
+  animation: fx-float 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.fx-aurora {
+  background-size: 140% 140%;
+  animation: fx-aurora 20s ease-in-out infinite alternate;
+  will-change: background-position;
+}
+
+.fx-stagger > * {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fx-enter 480ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.fx-stagger > *:nth-child(1) {
+  animation-delay: 50ms;
+}
+
+.fx-stagger > *:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.fx-stagger > *:nth-child(3) {
+  animation-delay: 150ms;
+}
+
+.fx-stagger > *:nth-child(4) {
+  animation-delay: 200ms;
+}
+
+.fx-stagger > *:nth-child(5) {
+  animation-delay: 250ms;
+}
+
+.fx-stagger > *:nth-child(6) {
+  animation-delay: 300ms;
+}
+
+.fx-stagger > *:nth-child(7) {
+  animation-delay: 350ms;
+}
+
+.fx-link {
+  position: relative;
+}
+
+.fx-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms cubic-bezier(0, 0, 0.2, 1);
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+}
+
+.fx-link:hover::after,
+.fx-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.fx-reveal-mask {
+  position: relative;
+  overflow: hidden;
+}
+
+.fx-reveal-mask::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(90deg, #f8fafc 0%, #eef2ff 100%);
+  transform: translateX(0);
+  animation: fx-reveal-wipe 900ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  pointer-events: none;
+}
+
+.dark .fx-reveal-mask::after {
+  background: linear-gradient(90deg, #020617 0%, #0f172a 100%);
+}
+
+[data-anim] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 480ms cubic-bezier(0, 0, 0.2, 1),
+    transform 480ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+[data-anim="fade-up-soft"] {
+  transform: translateY(20px);
+  transition-duration: 680ms;
+}
+
+[data-anim="stagger"] > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 460ms cubic-bezier(0, 0, 0.2, 1),
+    transform 460ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+[data-anim].is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-anim="stagger"].is-inview > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-anim="stagger"].is-inview > *:nth-child(1) {
+  transition-delay: 40ms;
+}
+
+[data-anim="stagger"].is-inview > *:nth-child(2) {
+  transition-delay: 90ms;
+}
+
+[data-anim="stagger"].is-inview > *:nth-child(3) {
+  transition-delay: 140ms;
+}
+
+[data-anim="stagger"].is-inview > *:nth-child(4) {
+  transition-delay: 190ms;
+}
+
+[data-anim="stagger"].is-inview > *:nth-child(5) {
+  transition-delay: 240ms;
+}
+
+[data-anim="stagger"].is-inview > *:nth-child(6) {
+  transition-delay: 290ms;
+}
+
+[data-anim="stagger"].is-inview > *:nth-child(7) {
+  transition-delay: 340ms;
+}
+
+.fx-parallax-layer {
+  will-change: transform;
+}
+
+.fx-marquee {
+  overflow: hidden;
+  position: relative;
+  border-radius: 0.9rem;
+  border: 1px solid rgb(148 163 184 / 0.35);
+  background: rgb(255 255 255 / 0.65);
+}
+
+.dark .fx-marquee {
+  border-color: rgb(71 85 105 / 0.6);
+  background: rgb(15 23 42 / 0.58);
+}
+
+.fx-marquee-track {
+  display: inline-flex;
+  min-width: max-content;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem;
+  animation: fx-marquee 22s linear infinite;
+}
+
+.fx-marquee:hover .fx-marquee-track {
+  animation-play-state: paused;
+}
+
+.fx-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgb(148 163 184 / 0.35);
+  background: rgb(255 255 255 / 0.8);
+  padding: 0.4rem 0.72rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: rgb(51 65 85);
+}
+
+.dark .fx-chip {
+  border-color: rgb(71 85 105 / 0.7);
+  background: rgb(30 41 59 / 0.7);
+  color: rgb(226 232 240);
+}
+
+@keyframes fx-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fx-float {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 14px, 0);
+  }
+}
+
+@keyframes fx-aurora {
+  0% {
+    background-position: 0% 15%;
+  }
+
+  50% {
+    background-position: 100% 35%;
+  }
+
+  100% {
+    background-position: 20% 100%;
+  }
+}
+
+@keyframes fx-reveal-wipe {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(102%);
+  }
+}
+
+@keyframes fx-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-enter,
+  .fx-enter-soft,
+  .fx-float,
+  .fx-aurora,
+  .fx-reveal-mask,
+  .fx-stagger > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .fx-link::after {
+    transition: none !important;
+  }
+
+  [data-anim],
+  [data-anim="stagger"] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .fx-marquee-track {
+    animation: none !important;
+  }
+
+  .fx-reveal-mask::after {
+    display: none !important;
+    animation: none !important;
+  }
+}

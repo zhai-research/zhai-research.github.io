@@ -2,20 +2,20 @@
 {% block content %}
   {% set profile = section.extra %}
 
-  <section class="grid items-start gap-7 sm:gap-8 lg:gap-10 lg:grid-cols-[1.2fr_0.8fr] fx-enter">
+  <section class="grid items-start gap-7 sm:gap-8 lg:gap-10 lg:grid-cols-[1.2fr_0.8fr]" data-parallax-root>
     <div>
-      <p class="inline-flex rounded-full border border-blue-300/50 bg-blue-100/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-blue-800 dark:border-blue-300/25 dark:bg-blue-300/10 dark:text-blue-200">Marine AI Research</p>
-      <h1 class="mt-4 font-['Manrope','Noto_Sans_SC',sans-serif] text-3xl font-extrabold leading-tight text-slate-900 sm:mt-5 sm:text-4xl md:text-6xl dark:text-white">
+      <p class="inline-flex rounded-full border border-blue-300/50 bg-blue-100/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-blue-800 dark:border-blue-300/25 dark:bg-blue-300/10 dark:text-blue-200" data-anim="fade-up">Marine AI Research</p>
+      <h1 class="mt-4 fx-reveal-mask font-['Manrope','Noto_Sans_SC',sans-serif] text-3xl font-extrabold leading-tight text-slate-900 sm:mt-5 sm:text-4xl md:text-6xl dark:text-white" data-anim="fade-up-soft">
         {{ profile.name | default(value=section.title) }}
       </h1>
-      <p class="mt-3 text-base font-semibold text-blue-700 sm:mt-4 sm:text-lg dark:text-blue-300">
+      <p class="mt-3 text-base font-semibold text-blue-700 sm:mt-4 sm:text-lg dark:text-blue-300" data-anim="fade-up">
         {% if profile.role %}{{ profile.role }}{% else %}Researcher{% endif %}{% if profile.affiliation %} · {{ profile.affiliation }}{% endif %}
       </p>
-      <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-700 sm:mt-5 sm:text-base sm:leading-8 dark:text-slate-300" id="hero-about">
+      <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-700 sm:mt-5 sm:text-base sm:leading-8 dark:text-slate-300" id="hero-about" data-anim="fade-up">
         {% if profile.research_bio %}{{ profile.research_bio | safe }}{% else %}聚焦海洋环境要素预测、稀疏重构与可解释智能方法，持续探索数据驱动模型在真实复杂场景中的可靠性。{% endif %}
       </p>
 
-      <div class="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-3">
+      <div class="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-3" data-anim="fade-up">
         {% if profile.email %}
           <a class="inline-flex w-full cursor-pointer items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white transition-colors duration-200 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-[0_12px_28px_-16px_rgba(30,64,175,0.55)] hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:bg-blue-300 dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-blue-300/60 sm:w-auto motion-reduce:transform-none motion-reduce:transition-none motion-reduce:shadow-none" href="mailto:{{ profile.email }}">
             联系我
@@ -25,11 +25,12 @@
           查看研究成果
         </a>
       </div>
+
     </div>
 
-    <aside class="rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.22)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(37,99,235,0.28)] dark:border-slate-700/70 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-30px_rgba(59,130,246,0.28)] dark:motion-safe:hover:shadow-[0_24px_70px_-35px_rgba(59,130,246,0.35)] sm:p-6 motion-reduce:transition-none fx-enter fx-delay-1">
+    <aside class="rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.22)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(37,99,235,0.28)] dark:border-slate-700/70 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-30px_rgba(59,130,246,0.28)] dark:motion-safe:hover:shadow-[0_24px_70px_-35px_rgba(59,130,246,0.35)] sm:p-6 motion-reduce:transition-none" data-anim="fade-up">
       <h2 class="text-sm font-bold uppercase tracking-[0.14em] text-blue-700 dark:text-blue-300">Research Focus</h2>
-      <ul class="mt-3 space-y-2.5 text-sm leading-6 text-slate-700 sm:mt-4 sm:space-y-3 sm:leading-7 dark:text-slate-300 fx-stagger">
+      <ul class="mt-3 space-y-2.5 text-sm leading-6 text-slate-700 sm:mt-4 sm:space-y-3 sm:leading-7 dark:text-slate-300" data-anim="stagger">
         {% if profile.research_highlights %}
           {% for item in profile.research_highlights %}
             <li class="rounded-xl border border-slate-200/80 bg-white/70 px-4 py-3 dark:border-slate-700/70 dark:bg-slate-800/60">{{ item }}</li>
@@ -40,7 +41,7 @@
       </ul>
 
       <h2 class="mt-6 text-sm font-bold uppercase tracking-[0.14em] text-blue-700 sm:mt-7 dark:text-blue-300">Links</h2>
-      <ul class="mt-3 grid gap-2 fx-stagger">
+      <ul class="mt-3 grid gap-2" data-anim="stagger">
         {% for link in profile.links %}
           <li>
             <a class="inline-flex w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200/80 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors duration-150 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-700/70 dark:bg-slate-800/50 dark:text-slate-200 dark:hover:border-blue-300/60 dark:hover:text-blue-200 dark:focus-visible:ring-blue-300/60 motion-reduce:transform-none motion-reduce:transition-none" href="{{ link.url }}" target="_blank" rel="noreferrer">
@@ -53,19 +54,50 @@
     </aside>
   </section>
 
+  <section class="mt-6 rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_54px_-34px_rgba(30,64,175,0.22)] backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/70 dark:shadow-[0_20px_54px_-30px_rgba(59,130,246,0.24)] sm:p-6" data-anim="fade-up">
+    <div class="flex items-center justify-between gap-3">
+      <h2 class="font-['Manrope','Noto_Sans_SC',sans-serif] text-lg font-extrabold text-slate-900 dark:text-white">Toolchain</h2>
+      <p class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Live Stack</p>
+    </div>
+    <div class="fx-marquee mt-4">
+      <div class="fx-marquee-track">
+        <span class="fx-chip">PyTorch</span><span class="fx-chip">NumPy</span><span class="fx-chip">xarray</span><span class="fx-chip">Zola</span><span class="fx-chip">Tailwind</span><span class="fx-chip">Ocean Data</span><span class="fx-chip">Forecasting</span><span class="fx-chip">Sparse Coding</span>
+        <span class="fx-chip">PyTorch</span><span class="fx-chip">NumPy</span><span class="fx-chip">xarray</span><span class="fx-chip">Zola</span><span class="fx-chip">Tailwind</span><span class="fx-chip">Ocean Data</span><span class="fx-chip">Forecasting</span><span class="fx-chip">Sparse Coding</span>
+      </div>
+    </div>
+  </section>
+
   {% set papers_section = get_section(path="papers/_index.md") %}
   {% set blog_section = get_section(path="blog/_index.md") %}
-  <section class="mt-7 grid gap-4 sm:mt-9 sm:gap-5 lg:grid-cols-[1.1fr_0.9fr] fx-enter fx-delay-2">
+  {% set papers_count = papers_section.pages | length %}
+  {% set blog_count = blog_section.pages | length %}
+  {% set links_count = profile.links | default(value=[]) | length %}
+  <section class="mt-7 grid gap-4 sm:mt-9 sm:gap-5 lg:grid-cols-[1.1fr_0.9fr]" data-anim="fade-up">
     <article class="rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.2)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(37,99,235,0.26)] dark:border-slate-700/70 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-30px_rgba(59,130,246,0.24)] dark:motion-safe:hover:shadow-[0_24px_70px_-35px_rgba(59,130,246,0.32)] sm:p-6 motion-reduce:transition-none">
       <div class="flex items-center justify-between">
         <h2 class="font-['Manrope','Noto_Sans_SC',sans-serif] text-lg font-extrabold text-slate-900 sm:text-xl dark:text-white">Recent Outputs</h2>
         <a class="rounded-md px-2 py-1 text-xs font-semibold text-slate-600 transition-colors duration-150 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:text-slate-400 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/papers/">查看全部</a>
       </div>
 
+      <div class="mt-4 grid grid-cols-3 gap-2.5" data-anim="stagger">
+        <div class="rounded-xl border border-slate-200/80 bg-white/70 px-3 py-2.5 text-center dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">Papers</p>
+          <p class="mt-1 font-['Manrope','Noto_Sans_SC',sans-serif] text-xl font-extrabold text-slate-900 dark:text-white"><span data-countup-target="{{ papers_count }}">0</span></p>
+        </div>
+        <div class="rounded-xl border border-slate-200/80 bg-white/70 px-3 py-2.5 text-center dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">Logs</p>
+          <p class="mt-1 font-['Manrope','Noto_Sans_SC',sans-serif] text-xl font-extrabold text-slate-900 dark:text-white"><span data-countup-target="{{ blog_count }}">0</span></p>
+        </div>
+        <div class="rounded-xl border border-slate-200/80 bg-white/70 px-3 py-2.5 text-center dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">Links</p>
+          <p class="mt-1 font-['Manrope','Noto_Sans_SC',sans-serif] text-xl font-extrabold text-slate-900 dark:text-white"><span data-countup-target="{{ links_count }}">0</span></p>
+        </div>
+      </div>
+
       <div class="mt-4 grid gap-3 sm:grid-cols-2">
         <div class="rounded-2xl border border-slate-200/80 bg-white/70 p-3.5 dark:border-slate-700/70 dark:bg-slate-800/55">
           <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Papers</p>
-          <ul class="mt-2 space-y-2 fx-stagger">
+          <ul class="mt-2 space-y-2" data-anim="stagger">
             {% if papers_section.pages and papers_section.pages | length > 0 %}
               {% for paper in papers_section.pages | sort(attribute="date") | reverse %}
                 {% if loop.index <= 2 %}
@@ -82,7 +114,7 @@
 
         <div class="rounded-2xl border border-slate-200/80 bg-white/70 p-3.5 dark:border-slate-700/70 dark:bg-slate-800/55">
           <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Logs</p>
-          <ul class="mt-2 space-y-2 fx-stagger">
+          <ul class="mt-2 space-y-2" data-anim="stagger">
             {% if blog_section.pages and blog_section.pages | length > 0 %}
               {% for post in blog_section.pages | sort(attribute="date") | reverse %}
                 {% if loop.index <= 2 %}
@@ -101,7 +133,7 @@
 
     <article class="rounded-3xl border border-slate-300/70 bg-white/75 p-4 shadow-[0_20px_60px_-35px_rgba(37,99,235,0.2)] backdrop-blur transition-shadow duration-300 motion-safe:ease-out motion-safe:hover:shadow-[0_24px_70px_-36px_rgba(37,99,235,0.26)] dark:border-slate-700/70 dark:bg-slate-900/70 dark:shadow-[0_20px_60px_-30px_rgba(59,130,246,0.24)] dark:motion-safe:hover:shadow-[0_24px_70px_-35px_rgba(59,130,246,0.32)] sm:p-6 motion-reduce:transition-none">
       <h2 class="font-['Manrope','Noto_Sans_SC',sans-serif] text-lg font-extrabold text-slate-900 sm:text-xl dark:text-white">Research Timeline</h2>
-      <ol class="mt-4 space-y-3 fx-stagger">
+      <ol class="mt-4 space-y-3" data-anim="stagger">
         <li class="rounded-xl border border-slate-200/80 bg-white/70 px-3.5 py-3 dark:border-slate-700/70 dark:bg-slate-800/55">
           <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Current</p>
           <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">深度时序建模与稀疏重构方法并行推进，关注真实海况泛化能力。</p>
