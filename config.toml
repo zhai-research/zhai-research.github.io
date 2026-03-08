@@ -1,0 +1,9 @@
+base_url = "https://zhai-research.github.io"
+default_language = "zh"
+compile_sass = false
+build_search_index = false
+
+[markdown.highlighting]
+theme = "github-dark"
+
+[extra]
