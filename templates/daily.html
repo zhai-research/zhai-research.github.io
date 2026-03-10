@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if section.pages and section.pages | length > 0 %}
+    {% set posts = section.pages | sort(attribute="date") | reverse %}
+    <section class="daily-index-shell" data-anim="stagger">
+      <header class="daily-index-hero">
+        <div class="daily-index-hero-copy">
+          <p class="daily-index-eyebrow">Daily Research</p>
+          <h1 class="daily-index-title">{{ section.title }}</h1>
+          {% if section.extra.description %}<p class="daily-index-description">{{ section.extra.description }}</p>{% endif %}
+        </div>
+        <div class="daily-index-stat">
+          <span class="daily-index-stat-value">{{ posts | length }}</span>
+          <span class="daily-index-stat-label">articles</span>
+        </div>
+      </header>
+
+      <div class="daily-index-layout">
+        <aside class="daily-index-timeline" aria-label="每日动态时间线">
+          <div class="daily-index-timeline-card">
+            <p class="daily-index-timeline-title">Timeline</p>
+            <ol class="daily-index-timeline-list">
+              {% for post in posts %}
+                {% set card_id = "daily-card-" ~ loop.index %}
+                <li class="daily-index-timeline-item">
+                  <a class="daily-index-timeline-link" href="#{{ card_id }}" data-daily-index-link="{{ card_id }}">
+                    {% if post.date %}<span class="daily-index-timeline-date">{{ post.date | date(format="%m.%d") }}</span>{% endif %}
+                    <span class="daily-index-timeline-text">{{ post.title }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ol>
+          </div>
+        </aside>
+
+        <div class="daily-index-grid">
+          {% for post in posts %}
+            {% set card_id = "daily-card-" ~ loop.index %}
+            <article class="daily-index-card" id="{{ card_id }}" data-daily-index-card>
+              <a class="daily-index-card-link" href="{{ post.permalink }}">
+                <div class="daily-index-card-head">
+                  {% if post.date %}<p class="daily-index-card-date">{{ post.date | date(format="%Y-%m-%d") }}</p>{% endif %}
+                  <h2 class="daily-index-card-title">{{ post.title }}</h2>
+                </div>
+
+                {% if post.summary %}
+                  <div class="daily-index-card-summary">
+                    <p>{{ post.summary | striptags | truncate(length=120) }}</p>
+                  </div>
+                {% endif %}
+
+                <div class="daily-index-card-foot">
+                  {% if post.extra.tags %}
+                    <div class="daily-index-tags">
+                      {% for tag in post.extra.tags %}
+                        {% if loop.index <= 4 %}
+                          <span class="daily-pill daily-pill-soft">{{ tag }}</span>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  <span class="daily-index-card-action">阅读全文</span>
+                </div>
+              </a>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% else %}
+    <section class="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white/60 p-5 dark:border-slate-600 dark:bg-slate-900/40 sm:mt-6 sm:p-6">
+      <p class="text-slate-700 dark:text-slate-300">暂无每日动态，首次自动生成并推送后会显示在这里。</p>
+    </section>
+  {% endif %}
+{% endblock content %}

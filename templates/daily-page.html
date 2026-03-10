@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="daily-detail-shell" data-anim="stagger">
+    <div class="daily-detail-main">
+      <article class="daily-detail-article">
+        <p class="daily-detail-backline">
+          <a class="daily-detail-back" href="/daily/">返回每日动态</a>
+        </p>
+
+        <header class="daily-detail-header">
+          {% if page.date %}<p class="daily-detail-date">{{ page.date | date(format="%B %d, %Y") }}</p>{% endif %}
+          <h1 class="daily-detail-title">{{ page.title }}</h1>
+          {% if page.extra.tags %}
+            <div class="daily-detail-tags" aria-label="文章标签">
+              {% for tag in page.extra.tags %}
+                <span class="daily-pill daily-pill-soft">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </header>
+
+        <div class="daily-detail-body" data-daily-detail-body>
+          {{ page.content | safe }}
+        </div>
+      </article>
+    </div>
+
+    <aside class="daily-detail-side">
+      <div class="daily-detail-side-card">
+        <p class="daily-detail-side-title">Quick Index</p>
+        <p class="daily-detail-side-copy">围绕九个固定问题快速定位论文内容。</p>
+        <ol class="daily-detail-index" data-daily-detail-index></ol>
+      </div>
+    </aside>
+  </section>
+{% endblock content %}

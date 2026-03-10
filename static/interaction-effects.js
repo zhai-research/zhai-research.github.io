@@ -102,7 +102,114 @@
     });
   }
 
+  function initDailyDetailIndex() {
+    const body = document.querySelector("[data-daily-detail-body]");
+    const indexList = document.querySelector("[data-daily-detail-index]");
+    if (!body || !indexList) return;
+
+    const headings = Array.from(body.querySelectorAll("h2[id]"));
+    if (!headings.length) return;
+
+    const setCurrent = (id) => {
+      Array.from(indexList.querySelectorAll("[data-daily-detail-link]")).forEach((link) => {
+        const isCurrent = link.getAttribute("data-daily-detail-link") === id;
+        link.classList.toggle("is-current", isCurrent);
+        link.setAttribute("aria-current", isCurrent ? "true" : "false");
+      });
+    };
+
+    headings.forEach((heading) => {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.className = "daily-detail-index-link";
+      link.href = "#" + heading.id;
+      link.textContent = heading.textContent || "";
+      link.setAttribute("data-daily-detail-link", heading.id);
+      link.setAttribute("aria-current", "false");
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        heading.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+        history.replaceState(null, "", "#" + heading.id);
+        setCurrent(heading.id);
+      });
+      item.appendChild(link);
+      indexList.appendChild(item);
+    });
+
+    const initialId = window.location.hash ? window.location.hash.slice(1) : headings[0].id;
+    if (initialId) setCurrent(initialId);
+
+    if (!("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        setCurrent(visible.target.id);
+      },
+      {
+        root: null,
+        rootMargin: "-18% 0px -62% 0px",
+        threshold: [0.2, 0.45, 0.7],
+      }
+    );
+
+    headings.forEach((heading) => observer.observe(heading));
+  }
+
+  function initDailyIndexTimeline() {
+    const cards = Array.from(document.querySelectorAll("[data-daily-index-card]"));
+    const links = Array.from(document.querySelectorAll("[data-daily-index-link]"));
+    if (!cards.length || !links.length) return;
+
+    const setCurrent = (id) => {
+      links.forEach((link) => {
+        const isCurrent = link.getAttribute("data-daily-index-link") === id;
+        link.classList.toggle("is-current", isCurrent);
+        link.setAttribute("aria-current", isCurrent ? "true" : "false");
+      });
+    };
+
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const id = link.getAttribute("data-daily-index-link");
+        const target = id ? document.getElementById(id) : null;
+        if (!target) return;
+        target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+        history.replaceState(null, "", "#" + id);
+        setCurrent(id);
+      });
+    });
+
+    const initialId = window.location.hash ? window.location.hash.slice(1) : cards[0].id;
+    if (initialId) setCurrent(initialId);
+
+    if (!("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        setCurrent(visible.target.id);
+      },
+      {
+        root: null,
+        rootMargin: "-16% 0px -55% 0px",
+        threshold: [0.2, 0.45, 0.7],
+      }
+    );
+
+    cards.forEach((card) => observer.observe(card));
+  }
+
   initViewportAnimations();
   initCountUp();
   initParallax();
+  initDailyIndexTimeline();
+  initDailyDetailIndex();
 })();

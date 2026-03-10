@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   {% set profile = section.extra %}
+  {% set daily_section = get_section(path="daily/_index.md") %}
 
   <section class="grid items-start gap-7 sm:gap-8 lg:gap-10 lg:grid-cols-[1.2fr_0.8fr]" data-parallax-root>
     <div>
@@ -69,6 +70,7 @@
 
   {% set papers_section = get_section(path="papers/_index.md") %}
   {% set blog_section = get_section(path="blog/_index.md") %}
+  {% set daily_count = daily_section.pages | length %}
   {% set papers_count = papers_section.pages | length %}
   {% set blog_count = blog_section.pages | length %}
   {% set links_count = profile.links | default(value=[]) | length %}
@@ -79,10 +81,14 @@
         <a class="rounded-md px-2 py-1 text-xs font-semibold text-slate-600 transition-colors duration-150 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:text-slate-400 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/papers/">查看全部</a>
       </div>
 
-      <div class="mt-4 grid grid-cols-3 gap-2.5" data-anim="stagger">
+      <div class="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-4" data-anim="stagger">
         <div class="rounded-xl border border-slate-200/80 bg-white/70 px-3 py-2.5 text-center dark:border-slate-700/70 dark:bg-slate-800/55">
           <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">Papers</p>
           <p class="mt-1 font-['Manrope','Noto_Sans_SC',sans-serif] text-xl font-extrabold text-slate-900 dark:text-white"><span data-countup-target="{{ papers_count }}">0</span></p>
+        </div>
+        <div class="rounded-xl border border-slate-200/80 bg-white/70 px-3 py-2.5 text-center dark:border-slate-700/70 dark:bg-slate-800/55">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">Daily</p>
+          <p class="mt-1 font-['Manrope','Noto_Sans_SC',sans-serif] text-xl font-extrabold text-slate-900 dark:text-white"><span data-countup-target="{{ daily_count }}">0</span></p>
         </div>
         <div class="rounded-xl border border-slate-200/80 bg-white/70 px-3 py-2.5 text-center dark:border-slate-700/70 dark:bg-slate-800/55">
           <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">Logs</p>
@@ -94,7 +100,7 @@
         </div>
       </div>
 
-      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+      <div class="mt-4 grid gap-3 lg:grid-cols-[1fr_1fr_1.15fr]">
         <div class="rounded-2xl border border-slate-200/80 bg-white/70 p-3.5 dark:border-slate-700/70 dark:bg-slate-800/55">
           <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Papers</p>
           <ul class="mt-2 space-y-2" data-anim="stagger">
@@ -128,6 +134,32 @@
             {% endif %}
           </ul>
         </div>
+
+        <div class="rounded-2xl border border-slate-200/80 bg-white/70 p-3.5 dark:border-slate-700/70 dark:bg-slate-800/55">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Daily Briefing</p>
+              <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">每日 AI 汇总研究进展</p>
+            </div>
+            <a class="shrink-0 rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-semibold text-slate-700 transition-colors duration-150 hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-600 dark:text-slate-200 dark:hover:border-blue-300 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/daily/">查看全部</a>
+          </div>
+          <ul class="mt-3 space-y-2" data-anim="stagger">
+            {% if daily_section.pages and daily_section.pages | length > 0 %}
+              {% for post in daily_section.pages | sort(attribute="date") | reverse %}
+                {% if loop.index <= 2 %}
+                  <li>
+                    <a class="block rounded-lg px-2 py-1.5 text-sm text-slate-700 transition-colors duration-150 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="{{ post.permalink }}">
+                      <span class="block font-medium text-slate-900 dark:text-white">{{ post.title }}</span>
+                      {% if post.date %}<span class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">{{ post.date | date(format="%Y-%m-%d") }}</span>{% endif %}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <li class="px-2 py-1.5 text-sm text-slate-500 dark:text-slate-400">每日动态将在首次自动生成后显示</li>
+            {% endif %}
+          </ul>
+        </div>
       </div>
     </article>
 
@@ -152,6 +184,7 @@
         {% if profile.email %}
           <a class="inline-flex items-center justify-center rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:bg-blue-300 dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="mailto:{{ profile.email }}">合作交流</a>
         {% endif %}
+        <a class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors duration-150 hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-600 dark:text-slate-200 dark:hover:border-blue-300 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/daily/">每日动态</a>
         <a class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors duration-150 hover:border-blue-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-600 dark:text-slate-200 dark:hover:border-blue-300 dark:hover:text-blue-300 dark:focus-visible:ring-blue-300/60 motion-reduce:transition-none" href="/blog/">研究日志</a>
       </div>
     </article>
