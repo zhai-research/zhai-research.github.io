@@ -1,12 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <section class="daily-detail-shell" data-anim="stagger">
+  <section class="daily-detail-shell">
     <div class="daily-detail-main">
-      <article class="daily-detail-article">
-        <p class="daily-detail-backline">
-          <a class="daily-detail-back" href="/daily/">返回每日动态</a>
-        </p>
+      <article class="daily-detail-article" data-anim="fade-up-soft">
+        <nav class="daily-detail-breadcrumb" aria-label="面包屑导航">
+          <ol class="daily-detail-breadcrumb-list">
+            <li class="daily-detail-breadcrumb-item">
+              <a class="daily-detail-breadcrumb-link" href="/">首页</a>
+            </li>
+            <li class="daily-detail-breadcrumb-sep" aria-hidden="true">/</li>
+            <li class="daily-detail-breadcrumb-item">
+              <a class="daily-detail-breadcrumb-link" href="/daily/">每日动态</a>
+            </li>
+            <li class="daily-detail-breadcrumb-sep" aria-hidden="true">/</li>
+            <li class="daily-detail-breadcrumb-item">
+              <span class="daily-detail-breadcrumb-current" aria-current="page">{{ page.title }}</span>
+            </li>
+          </ol>
+        </nav>
 
         <header class="daily-detail-header">
           {% if page.date %}<p class="daily-detail-date">{{ page.date | date(format="%B %d, %Y") }}</p>{% endif %}
@@ -27,9 +39,8 @@
     </div>
 
     <aside class="daily-detail-side">
-      <div class="daily-detail-side-card">
-        <p class="daily-detail-side-title">Quick Index</p>
-        <p class="daily-detail-side-copy">围绕九个固定问题快速定位论文内容。</p>
+      <div class="daily-detail-side-card" data-anim="fade-up-soft">
+        <p class="daily-detail-side-title">目录</p>
         <ol class="daily-detail-index" data-daily-detail-index></ol>
       </div>
     </aside>

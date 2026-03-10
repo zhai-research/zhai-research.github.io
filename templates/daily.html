@@ -10,9 +10,9 @@
           <h1 class="daily-index-title">{{ section.title }}</h1>
           {% if section.extra.description %}<p class="daily-index-description">{{ section.extra.description }}</p>{% endif %}
         </div>
-        <div class="daily-index-stat">
-          <span class="daily-index-stat-value">{{ posts | length }}</span>
-          <span class="daily-index-stat-label">articles</span>
+        <div class="daily-index-meta">
+          <span class="daily-index-meta-pill">{{ posts | length }} articles</span>
+          {% if posts | length > 0 and posts[0].date %}<span class="daily-index-meta-pill">latest {{ posts[0].date | date(format="%Y-%m-%d") }}</span>{% endif %}
         </div>
       </header>
 
@@ -20,24 +20,39 @@
         <aside class="daily-index-timeline" aria-label="每日动态时间线">
           <div class="daily-index-timeline-card">
             <p class="daily-index-timeline-title">Timeline</p>
-            <ol class="daily-index-timeline-list">
-              {% for post in posts %}
-                {% set card_id = "daily-card-" ~ loop.index %}
-                <li class="daily-index-timeline-item">
-                  <a class="daily-index-timeline-link" href="#{{ card_id }}" data-daily-index-link="{{ card_id }}">
-                    {% if post.date %}<span class="daily-index-timeline-date">{{ post.date | date(format="%m.%d") }}</span>{% endif %}
-                    <span class="daily-index-timeline-text">{{ post.title }}</span>
-                  </a>
-                </li>
-              {% endfor %}
-            </ol>
+            <div class="daily-index-timeline-scroll" tabindex="0" aria-label="时间线滚动区域">
+              <ol class="daily-index-timeline-list">
+                {% set_global current_month = "" %}
+                {% set_global month_index = 0 %}
+                {% for post in posts %}
+                  {% set card_id = "daily-card-" ~ loop.index %}
+                  {% set month_key = post.date | date(format="%Y-%m") %}
+                  {% if month_key != current_month %}
+                    {% set_global current_month = month_key %}
+                    {% set_global month_index = month_index + 1 %}
+                    <li class="daily-index-timeline-group-item">
+                      <button class="daily-index-timeline-group" type="button" data-daily-index-group-toggle="{{ month_key }}" aria-expanded="{% if month_index == 1 %}true{% else %}false{% endif %}">
+                        <span>{{ post.date | date(format="%Y-%m") }}</span>
+                        <span class="daily-index-timeline-group-indicator">{% if month_index == 1 %}−{% else %}+{% endif %}</span>
+                      </button>
+                    </li>
+                  {% endif %}
+                  <li class="daily-index-timeline-item" data-daily-index-month-item="{{ month_key }}"{% if month_index != 1 %} hidden{% endif %}>
+                    <a class="daily-index-timeline-link" href="#{{ card_id }}" data-daily-index-link="{{ card_id }}" data-daily-index-month="{{ month_key }}">
+                      {% if post.date %}<span class="daily-index-timeline-date">{{ post.date | date(format="%m.%d") }}</span>{% endif %}
+                      <span class="daily-index-timeline-text">{{ post.title }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ol>
+            </div>
           </div>
         </aside>
 
         <div class="daily-index-grid">
           {% for post in posts %}
             {% set card_id = "daily-card-" ~ loop.index %}
-            <article class="daily-index-card" id="{{ card_id }}" data-daily-index-card>
+            <article class="daily-index-card" id="{{ card_id }}" data-daily-index-card data-daily-index-month-card="{{ post.date | date(format="%Y-%m") }}">
               <a class="daily-index-card-link" href="{{ post.permalink }}">
                 <div class="daily-index-card-head">
                   {% if post.date %}<p class="daily-index-card-date">{{ post.date | date(format="%Y-%m-%d") }}</p>{% endif %}
@@ -54,7 +69,7 @@
                   {% if post.extra.tags %}
                     <div class="daily-index-tags">
                       {% for tag in post.extra.tags %}
-                        {% if loop.index <= 4 %}
+                        {% if loop.index <= 3 %}
                           <span class="daily-pill daily-pill-soft">{{ tag }}</span>
                         {% endif %}
                       {% endfor %}
