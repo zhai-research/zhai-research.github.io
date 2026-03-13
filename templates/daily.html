@@ -3,7 +3,7 @@
 {% block content %}
   {% if section.pages and section.pages | length > 0 %}
     {% set posts = section.pages | sort(attribute="date") | reverse %}
-    <section class="daily-index-shell" data-anim="stagger">
+    <section class="daily-index-shell">
       <header class="daily-index-hero">
         <div>
           <p class="daily-index-eyebrow">Daily Research</p>

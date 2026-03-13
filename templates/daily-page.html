@@ -3,7 +3,7 @@
 {% block content %}
   <section class="daily-detail-shell">
     <div class="daily-detail-main">
-      <article class="daily-detail-article" data-anim="fade-up-soft">
+      <article class="daily-detail-article">
         <nav class="daily-detail-breadcrumb" aria-label="面包屑导航">
           <ol class="daily-detail-breadcrumb-list">
             <li class="daily-detail-breadcrumb-item">
@@ -32,14 +32,14 @@
           {% endif %}
         </header>
 
-        <div class="daily-detail-body" data-daily-detail-body>
+        <div class="daily-detail-body" data-daily-detail-body data-render-math>
           {{ page.content | safe }}
         </div>
       </article>
     </div>
 
     <aside class="daily-detail-side">
-      <div class="daily-detail-side-card" data-anim="fade-up-soft">
+      <div class="daily-detail-side-card">
         <p class="daily-detail-side-title">目录</p>
         <ol class="daily-detail-index" data-daily-detail-index></ol>
       </div>
