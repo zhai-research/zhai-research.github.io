@@ -5,6 +5,7 @@ draft = false
 [extra]
 tags = ["daily", "extreme-events", "deep-learning", "dynamics-informed", "FTLE", "Transformer", "chaotic-systems"]
 +++
+
 # 论文深度分析：Dynamics-Informed Deep Learning for Predicting Extreme Events
 
 > **作者**：Eirini Katsidoniotaki, Themistoklis P. Sapsis

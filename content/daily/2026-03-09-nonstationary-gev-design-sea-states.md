@@ -5,6 +5,7 @@ draft = false
 [extra]
 tags = ["daily", "extreme-value-analysis", "climate-change", "non-stationary-GEV", "offshore-wind", "significant-wave-height"]
 +++
+
 # 论文分析：气候变化下非平稳GEV模型估计设计海况
 
 > **论文标题**：Non-stationary GEV Models for Estimating Design Sea-States in a Changing Climate. Applications to Offshore Wind Farms Along the French Coasts

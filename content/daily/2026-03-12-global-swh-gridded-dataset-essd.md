@@ -6,6 +6,7 @@ draft = false
 tags = ["daily", "dataset", "satellite-altimetry", "significant-wave-height", "data-fusion", "ERA5", "WAVEWATCH-III"]
 +++
 
+
 # 论文分析：A Global Gridded Dataset of Significant Wave Height via Fusion of Multi-Mission Altimetry and Numerical Hindcast
 
 > **作者：** Haoyu Jiang, Hao Su

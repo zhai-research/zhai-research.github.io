@@ -6,6 +6,7 @@ draft = false
 tags = ["daily", "neural-implicit-representation", "SIREN", "water-surface", "unsupervised-learning", "NeurIPS"]
 +++
 
+
 ## 📄 论文六问
 
 ### Q1：这篇论文在说什么？（一句话概括）
