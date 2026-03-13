@@ -22,6 +22,15 @@
     );
 
     items.forEach((item) => observer.observe(item));
+
+    // Fallback: ensure visibility after a delay in case IntersectionObserver doesn't trigger
+    setTimeout(() => {
+      items.forEach((item) => {
+        if (!item.classList.contains("is-inview")) {
+          item.classList.add("is-inview");
+        }
+      });
+    }, 2000);
   }
 
   function initCountUp() {

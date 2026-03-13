@@ -1,3 +1,9 @@
+/* Fallback: always show content if JS doesn't add is-inview class */
+[data-anim]:not(.is-inview) {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 .fx-enter {
   opacity: 0;
   transform: translateY(12px);
@@ -256,8 +262,7 @@
 
 .daily-index-hero,
 .daily-index-card,
-.daily-detail-article,
-.daily-detail-side-card {
+.daily-detail-article {
   border-radius: 1.75rem;
   background: linear-gradient(180deg, rgb(255 255 255 / 0.92), rgb(248 250 252 / 0.82));
   box-shadow:
@@ -267,8 +272,7 @@
 
 .dark .daily-index-hero,
 .dark .daily-index-card,
-.dark .daily-detail-article,
-.dark .daily-detail-side-card {
+.dark .daily-detail-article {
   background: linear-gradient(180deg, rgb(15 23 42 / 0.92), rgb(15 23 42 / 0.78));
   box-shadow:
     0 24px 58px -36px rgb(2 6 23 / 0.56),
@@ -334,7 +338,6 @@
 }
 
 .dark .daily-index-description,
-.dark .daily-detail-side-copy,
 .dark .daily-detail-body {
   color: rgb(203 213 225);
 }
@@ -886,6 +889,40 @@
   border-radius: 1.2rem;
 }
 
+/* Table styles */
+.daily-detail-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.daily-detail-body th,
+.daily-detail-body td {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgb(203 213 225);
+  text-align: left;
+}
+
+.daily-detail-body th {
+  background-color: rgb(241 245 249);
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+
+.dark .daily-detail-body th {
+  background-color: rgb(30 41 59);
+  color: rgb(248 250 252);
+}
+
+.dark .daily-detail-body td {
+  border-color: rgb(71 85 105);
+}
+  max-width: 100%;
+  border-radius: 1.2rem;
+}
+
 .daily-detail-side {
   position: relative;
   align-self: start;
@@ -914,13 +951,6 @@
 
 .dark .daily-detail-side-title {
   color: rgb(148 163 184);
-}
-
-.daily-detail-side-copy {
-  margin: 0.5rem 0 0;
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: rgb(100 116 139);
 }
 
 .daily-detail-index {
@@ -1137,16 +1167,14 @@
   .daily-index-hero,
   .daily-index-timeline-card,
   .daily-index-card,
-  .daily-detail-article,
-  .daily-detail-side-card {
+  .daily-detail-article {
     border-radius: 1.4rem;
   }
 
   .daily-index-hero,
   .daily-index-timeline-card,
   .daily-index-card-link,
-  .daily-detail-article,
-  .daily-detail-side-card {
+  .daily-detail-article {
     padding: 1.1rem;
   }
 
@@ -1166,18 +1194,6 @@
   from {
     opacity: 0;
     transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes daily-panel-fade {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
   }
 
   to {

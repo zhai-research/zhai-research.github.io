@@ -5,7 +5,7 @@
     {% set posts = section.pages | sort(attribute="date") | reverse %}
     <section class="daily-index-shell" data-anim="stagger">
       <header class="daily-index-hero">
-        <div class="daily-index-hero-copy">
+        <div>
           <p class="daily-index-eyebrow">Daily Research</p>
           <h1 class="daily-index-title">{{ section.title }}</h1>
           {% if section.extra.description %}<p class="daily-index-description">{{ section.extra.description }}</p>{% endif %}
@@ -37,7 +37,7 @@
                       </button>
                     </li>
                   {% endif %}
-                  <li class="daily-index-timeline-item" data-daily-index-month-item="{{ month_key }}"{% if month_index != 1 %} hidden{% endif %}>
+                  <li data-daily-index-month-item="{{ month_key }}"{% if month_index != 1 %} hidden{% endif %}>
                     <a class="daily-index-timeline-link" href="#{{ card_id }}" data-daily-index-link="{{ card_id }}" data-daily-index-month="{{ month_key }}">
                       {% if post.date %}<span class="daily-index-timeline-date">{{ post.date | date(format="%m.%d") }}</span>{% endif %}
                       <span class="daily-index-timeline-text">{{ post.title }}</span>
@@ -52,7 +52,7 @@
         <div class="daily-index-grid">
           {% for post in posts %}
             {% set card_id = "daily-card-" ~ loop.index %}
-            <article class="daily-index-card" id="{{ card_id }}" data-daily-index-card data-daily-index-month-card="{{ post.date | date(format="%Y-%m") }}">
+            <article class="daily-index-card" id="{{ card_id }}" data-daily-index-card>
               <a class="daily-index-card-link" href="{{ post.permalink }}">
                 <div class="daily-index-card-head">
                   {% if post.date %}<p class="daily-index-card-date">{{ post.date | date(format="%Y-%m-%d") }}</p>{% endif %}
