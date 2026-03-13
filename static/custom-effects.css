@@ -111,6 +111,31 @@
   pointer-events: none;
 }
 
+/* Fix: hide reveal mask after animation */
+.fx-reveal-mask::after {
+  animation: fx-reveal-wipe 900ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards, fx-fade-out 100ms 900ms forwards;
+}
+
+@keyframes fx-fade-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+  position: relative;
+  overflow: hidden;
+}
+
+.fx-reveal-mask::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(90deg, #f8fafc 0%, #eef2ff 100%);
+  transform: translateX(0);
+  animation: fx-reveal-wipe 900ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  pointer-events: none;
+}
+
 .dark .fx-reveal-mask::after {
   background: linear-gradient(90deg, #020617 0%, #0f172a 100%);
 }
