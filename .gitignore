@@ -3,3 +3,4 @@
 .yarn-cache/
 node_modules/
 public/
+content/fulltext/
